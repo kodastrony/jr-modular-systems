@@ -1,0 +1,12 @@
+{
+  // Deploy the built site as static assets on Cloudflare Workers — no Worker
+  // script, so the Vite-framework integration (which needs Vite 6) is skipped.
+  // `npm run build` produces ./dist (single-file index.html + media), and this
+  // serves it; HashRouter means every route is index.html anyway.
+  "name": "jr-modular-systems",
+  "compatibility_date": "2025-01-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  }
+}
