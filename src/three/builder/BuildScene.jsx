@@ -217,17 +217,33 @@ export default function BuildScene({
     const moveGhostContainer = (e) => {
       const s = stateRef.current
       if (!ghostRef.current) return
-      plane.constant = -floorY(s.activeFloor)
+      // Auto storey: hovering a container's roof stacks on top of it; the open
+      // ground places on the ground floor. No manual floor picking.
+      let targetFloor = 0
+      const roofHit = pick(e, [modulesGroupRef])
+      if (roofHit && roofHit.kind === 'module') {
+        const m = s.modules.find((x) => x.id === roofHit.id)
+        if (m) targetFloor = m.floor + 1
+      }
+      if (targetFloor >= B.MAX_FLOORS) {
+        ghostRef.current.visible = false
+        candidate.current = null
+        lastCell.current = { cx: NaN, cz: NaN, f: NaN }
+        cbRef.current.onHint?.('full')
+        invalidate()
+        return
+      }
+      plane.constant = -floorY(targetFloor)
       raycaster.setFromCamera(ndc(e), camera)
       if (!raycaster.ray.intersectPlane(plane, v3)) return
       const { w, d } = B.footprintDims(s.tool, s.rot)
       const cx = Math.round(v3.x / CELL - w / 2), cz = Math.round(v3.z / CELL - d / 2)
-      if (cx === lastCell.current.cx && cz === lastCell.current.cz) return
-      lastCell.current = { cx, cz }
-      const cand = { type: s.tool, cx, cz, floor: s.activeFloor, rot: s.rot }
+      if (cx === lastCell.current.cx && cz === lastCell.current.cz && targetFloor === lastCell.current.f) return
+      lastCell.current = { cx, cz, f: targetFloor }
+      const cand = { type: s.tool, cx, cz, floor: targetFloor, rot: s.rot }
       const ok = B.validatePlacement(cand, s.modules, s.occ)
       const p = B.worldPosition(cand)
-      ghostRef.current.position.set(p[0], floorY(s.activeFloor) + MODULE_H / 2, p[2])
+      ghostRef.current.position.set(p[0], floorY(targetFloor) + MODULE_H / 2, p[2])
       ghostRef.current.visible = true
       if (ghostMatRef.current) {
         ghostMatRef.current.color.copy(ok.ok ? (ok.warn ? C_WARN : C_VALID) : C_INVALID)
@@ -395,22 +411,17 @@ export default function BuildScene({
         <meshBasicMaterial color="#3a4252" transparent opacity={0.55} />
       </mesh>
 
-      {/* dot lattice: containers snap to the active storey; terrace snaps to the ground */}
-      <DotGrid y={(cat === 'terrace' ? 0 : floorY(activeFloor)) + 0.01} opacity={0.6} />
-      {cat !== 'terrace' && activeFloor > 0 && <DotGrid y={0.02} opacity={0.16} radius={0.06} />}
+      {/* ground dot lattice (containers auto-stack onto roofs) */}
+      <DotGrid y={0.01} opacity={0.6} />
 
-      {/* placed containers */}
+      {/* placed containers — all storeys always visible so roofs are clickable */}
       <group ref={modulesGroupRef}>
-        {modules.map((m) => {
-          let dim = false
-          if (cat === 'container') { if (m.floor > activeFloor) return null; dim = m.floor < activeFloor }
-          return (
-            <BuildModule key={m.id} mod={m} geo={geo} color={cladColor} dim={dim}
-              selected={m.id === selectedId}
-              hover={cat === 'pick' && hover?.kind === 'module' && hover.id === m.id}
-              eraseMode={eraseMode} />
-          )
-        })}
+        {modules.map((m) => (
+          <BuildModule key={m.id} mod={m} geo={geo} color={cladColor} dim={false}
+            selected={m.id === selectedId}
+            hover={cat === 'pick' && hover?.kind === 'module' && hover.id === m.id}
+            eraseMode={eraseMode} />
+        ))}
       </group>
 
       {/* placed openings / solar / terrace */}

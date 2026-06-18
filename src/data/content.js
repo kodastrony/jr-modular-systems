@@ -164,7 +164,7 @@ export const offer = [
     title: 'Salony i pawilony handlowe',
     short: 'Modułowe pawilony handlowo-usługowe i salony samochodowe z dużymi przeszkleniami, eksponujące Twój towar.',
     icon: IMG('maly_sklep.png'),
-    hero: IMG('komis-samochodowy-rotated.jpg'),
+    hero: IMG('biuro-2.jpg'),
     gallery: ['komis-samochodowy-rotated.jpg', 'kontener_sprzedazowy-e1676630665156.jpg', 't-o-ekspozycja-aut.jpg', 't-o-mini-salon.jpg', 'mobilne_obiekty.jpg'].map(IMG),
     lead: 'Jedną z naszych specjalności są modułowe pawilony handlowe i salony sprzedaży – estetyczne, trwałe i ściśle dopasowane do branży. Idealne na sklepy, butiki, a także salony i mini-salony samochodowe.',
     sections: [
@@ -197,7 +197,7 @@ export const offer = [
     title: 'Kontenery gastronomiczne',
     short: 'Bary, restauracje i sezonowe punkty gastronomiczne z zabudową barową i pełnymi instalacjami.',
     icon: IMG('gastro.png'),
-    hero: IMG('Budynek-gastronomiczny.jpg'),
+    hero: IMG('gastro-3.jpg'),
     gallery: ['Budynek-gastronomiczny.jpg', 'gastro-3.jpg', 'gastro-5.jpg', 'Modulowa-piekarnia.jpg', 't-o-coffee-bar.jpg'].map(IMG),
     lead: 'Wykonujemy kontenery gastronomiczne w technologii prefabrykacji. Sprawdzają się doskonale w funkcji barów, restauracji czy sezonowych punktów gastronomicznych.',
     sections: [
@@ -346,7 +346,7 @@ export const about = {
 
 /* ---- Technology ---- */
 export const technology = {
-  hero: { headline: 'Technologia modułowa', sub: 'Nowa rzeczywistość budowlana na świecie. Nowoczesne budynki w oparciu o innowacyjne, autorskie metody produkcyjne.' },
+  hero: { headline: 'Technologia modułowa', sub: 'Nowa rzeczywistość budowlana na świecie. Nowoczesne budynki w oparciu o innowacyjne, autorskie metody produkcyjne.', image: IMG('mobilne_obiekty.jpg') },
   intro: [
     'Jesteśmy specjalistami od technologii modułowej. Wykonujemy nowoczesne budynki w oparciu o innowacyjne, autorskie metody produkcyjne. Nasz zespół tworzą fachowcy z różnych dziedzin – m.in. projektanci, architekci, inżynierowie, montażyści i spawacze. Dysponujemy własną rozbudowaną halą produkcyjną wyposażoną w zaawansowane technologicznie urządzenia.',
     'Dostarczane przez nas modułowe pawilony handlowe i usługowe, biurowce, placówki oświatowe i medyczne oraz inne budynki to obiekty o bardzo dobrych parametrach użytkowych. Dzięki stosowaniu technologii prefabrykowanej ich wykonanie trwa niezwykle krótko.',
@@ -356,17 +356,17 @@ export const technology = {
     {
       heading: 'Konstrukcja',
       text: 'Stal to nasz główny materiał konstrukcyjny. Charakteryzuje się wytrzymałością, estetyką oraz – przy prawidłowym zabezpieczeniu – wyjątkową trwałością w czasie. Wykonujemy moduły spawane lub skręcane. Wszystkie konstrukcje na etapie projektowania poddawane są obliczeniom statycznym oraz modelowaniu 3D.',
-      image: IMG('elewacje-wentylowane-rotated.jpg'),
+      image: IMG('b2c9a186-1692-48bd-bd24-d1525175ac2e.jpg'),
     },
     {
       heading: 'Technologia modułowa',
       text: 'Większość procesu realizacji odbywa się poza miejscem przyszłej lokalizacji budynku. Moduły wykonywane są w zamkniętej hali produkcyjnej w kontrolowanych warunkach, pod ścisłą kontrolą jakości. Wielkość budynku nie jest odgórnie zdeterminowana – obiekt może stanowić zestaw modułów od kilku do nawet kilkudziesięciu sztuk.',
-      image: IMG('mobilne_obiekty.jpg'),
+      image: IMG('biuro-4.jpg'),
     },
     {
       heading: 'Konstrukcja przegród',
       text: 'Do wykończeń wewnętrznych i zewnętrznych stosujemy materiały o wysokiej jakości, odpowiadające zamysłowi estetycznemu projektu. Nowoczesne okładziny elewacyjne oraz wysokiej klasy stolarka okienna sprawiają, że gotowy budynek może niczym nie różnić się od budynku wykonanego w technologii murowania.',
-      image: IMG('kontenery-premium-rotated.jpg'),
+      image: IMG('biuro-2.jpg'),
     },
   ],
   advantages: [

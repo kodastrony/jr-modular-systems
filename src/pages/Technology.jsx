@@ -10,7 +10,7 @@ export default function Technology() {
   return (
     <>
       <section className="page-hero with-image" style={{ minHeight: '56vh' }}>
-        <div className="page-hero-media"><img src={technology.blocks[0].image} alt="Technologia modułowa" /></div>
+        <div className="page-hero-media"><img src={technology.hero.image} alt="Technologia modułowa" /></div>
         <div className="container">
           <div className="breadcrumbs"><Link to="/">Start</Link><span className="sep">/</span><span>Technologia</span></div>
           <Reveal>

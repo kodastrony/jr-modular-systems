@@ -340,7 +340,6 @@ export default function Configurator() {
       else if (k === 't') selectTool('terrace')
       else if (k === 'g') generate()
       else if (k === 'f') cameraApiRef.current?.fit()
-      else if (k >= '1' && k <= String(B.MAX_FLOORS)) setActiveFloor(Number(k) - 1)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -464,6 +463,7 @@ function BuildUI({
             <button className="bld-rotate" onClick={() => setRot((r) => (r ? 0 : 1))} title="Obróć (R)">
               <Rotate /> Obrót {rot ? '90°' : '0°'} <kbd>R</kbd>
             </button>
+            <p className="bld-hint-txt">Najedź na <b style={{ color: 'var(--on-dark)' }}>dach kontenera</b>, aby postawić moduł piętro wyżej — albo na wolny plac, by ustawić go na ziemi.</p>
           </section>
 
           <section className="bld-sec">
@@ -478,20 +478,6 @@ function BuildUI({
             {ADDON_TOOLS.find((a) => a.id === tool) && (
               <p className="bld-hint-txt">{ADDON_TOOLS.find((a) => a.id === tool).hint}</p>
             )}
-          </section>
-
-          <section className="bld-sec">
-            <div className="bld-h">Kondygnacja</div>
-            <div className="bld-floors">
-              {Array.from({ length: B.MAX_FLOORS }, (_, f) => B.MAX_FLOORS - 1 - f).map((f) => (
-                <button key={f} className={`bld-floor ${activeFloor === f ? 'on' : ''}`} onClick={() => setActiveFloor(f)}>
-                  <Layers style={{ width: 15, height: 15, opacity: 0.7 }} />
-                  <span>{FLOOR_LABEL[f]}</span>
-                  <em>{floorCounts[f] || 0}</em>
-                </button>
-              ))}
-            </div>
-            <p className="bld-hint-txt">Moduły kontenerowe stawiasz na aktywnej kondygnacji; muszą mieć podparcie poniżej.</p>
           </section>
 
           <section className="bld-sec">

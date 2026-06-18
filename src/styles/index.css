@@ -225,8 +225,8 @@ section { position: relative; }
 .nav-dd-item { display: flex; align-items: center; gap: 12px; padding: 9px 11px; border-radius: var(--r-sm); transition: background 0.18s; }
 .nav-dd-item:hover { background: var(--bg-soft); }
 .nav-dd-item img { width: 26px; height: 26px; object-fit: contain; opacity: 0.8; }
-.nav-dd-item b { font-size: 0.9rem; font-weight: 550; }
-.nav-dd-item span { font-size: 0.78rem; color: var(--faint); }
+.nav-dd-item b { display: block; font-size: 0.9rem; font-weight: 600; line-height: 1.25; }
+.nav-dd-item span { display: block; margin-top: 3px; font-size: 0.78rem; color: var(--faint); line-height: 1.35; }
 
 .nav-cta { margin-left: 6px; }
 .nav-burger { display: none; margin-left: auto; width: 42px; height: 42px; border-radius: var(--r-sm); align-items: center; justify-content: center; }
