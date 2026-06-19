@@ -95,7 +95,7 @@ export default function Contact() {
                 <h2 className="h3" style={{ marginBottom: 6 }}>Formularz kontaktowy</h2>
                 <p className="text-muted" style={{ marginBottom: 22 }}>Odpowiadamy na wszystkie zgłoszenia najpóźniej do 24 godzin.</p>
                 {sent ? (
-                  <div className="form-success">
+                  <div className="form-success" role="status" aria-live="polite">
                     <Check style={{ width: 20, height: 20, color: 'var(--accent)', display: 'inline', verticalAlign: '-4px', marginRight: 8 }} />
                     Dziękujemy! Otworzyliśmy Twój program pocztowy, by dokończyć wysyłkę. Jeśli to nie zadziałało, napisz na <a href={`mailto:${company.email}`} style={{ color: 'var(--accent)' }}>{company.email}</a>.
                   </div>

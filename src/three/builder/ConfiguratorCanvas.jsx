@@ -36,11 +36,17 @@ export default function ConfiguratorCanvas(props) {
     return () => ids.forEach(clearTimeout)
   }, [mode])
 
+  // cap the pixel ratio lower on phones — full retina dpr over a shadowed scene
+  // is the main source of jank on weak mobile GPUs (AdaptiveDpr trims further)
+  const isMobile = typeof window !== 'undefined' && window.matchMedia
+    && window.matchMedia('(max-width: 760px)').matches
+  const maxDpr = mode === 'present' ? (isMobile ? 1.5 : 2) : (isMobile ? 1.25 : 1.6)
+
   return (
     <Canvas
       shadows
       frameloop="demand"
-      dpr={[1, mode === 'present' ? 2 : 1.6]}
+      dpr={[1, maxDpr]}
       camera={{ position: [18, 18, 18], fov: 32, near: 0.1, far: 1200 }}
       gl={{ antialias: true, alpha: false, preserveDrawingBuffer: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.05 }}
       onCreated={({ scene }) => {

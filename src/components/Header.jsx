@@ -18,6 +18,13 @@ export default function Header({ dark = false }) {
 
   useEffect(() => { setOpen(false); setOfferOpen(false) }, [pathname])
   useEffect(() => { document.body.style.overflow = open ? 'hidden' : '' }, [open])
+  // close the drawer with Escape
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e) => { if (e.key === 'Escape') setOpen(false) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open])
 
   const cls = `nav ${scrolled ? 'scrolled' : ''} ${dark && !scrolled ? 'on-dark' : ''}`
 
@@ -61,14 +68,20 @@ export default function Header({ dark = false }) {
             <Cube style={{ width: 16, height: 16 }} /> Konfigurator 3D
           </Link>
 
-          <button className={`nav-burger ${open ? 'open' : ''}`} aria-label="Menu" onClick={() => setOpen((o) => !o)}>
+          <button
+            className={`nav-burger ${open ? 'open' : ''}`}
+            aria-label={open ? 'Zamknij menu' : 'Otwórz menu'}
+            aria-expanded={open}
+            aria-controls="mobile-drawer"
+            onClick={() => setOpen((o) => !o)}
+          >
             <span />
           </button>
         </div>
       </header>
 
-      {/* mobile drawer */}
-      <div className={`drawer ${open ? 'open' : ''}`}>
+      {/* mobile drawer — inert + hidden from the a11y tree and tab order when closed */}
+      <div id="mobile-drawer" className={`drawer ${open ? 'open' : ''}`} aria-hidden={!open} {...(open ? {} : { inert: '' })}>
         <Link to="/">Start</Link>
         <Link to="/o-nas">O nas</Link>
         <div className="drawer-group-label">Oferta</div>

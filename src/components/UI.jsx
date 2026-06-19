@@ -1,6 +1,10 @@
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Reveal from './Reveal.jsx'
 import { Arrow, ArrowUpRight } from './Icons.jsx'
+
+const prefersReduced = typeof window !== 'undefined' && window.matchMedia
+  && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 export function SectionHead({ eyebrow, title, lead, center, light }) {
   return (
@@ -12,10 +16,34 @@ export function SectionHead({ eyebrow, title, lead, center, light }) {
   )
 }
 
-export function Stat({ value, accent, label }) {
+/* A stat figure. With a numeric `to` it counts up the first time it scrolls into
+   view (easeOutCubic); with a non-numeric `value` it renders that node statically. */
+export function Stat({ to, suffix = '', value, label, duration = 1500 }) {
+  const isNum = typeof to === 'number'
+  const ref = useRef(null)
+  const [val, setVal] = useState(isNum && !prefersReduced ? 0 : to)
+  useEffect(() => {
+    if (!isNum) return
+    const el = ref.current
+    if (!el || prefersReduced || typeof IntersectionObserver === 'undefined') { setVal(to); return }
+    let raf = 0
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return
+      io.disconnect()
+      const t0 = performance.now()
+      const tick = (now) => {
+        const p = Math.min(1, (now - t0) / duration)
+        setVal(Math.round(to * (1 - Math.pow(1 - p, 3))))
+        if (p < 1) raf = requestAnimationFrame(tick)
+      }
+      raf = requestAnimationFrame(tick)
+    }, { threshold: 0.45 })
+    io.observe(el)
+    return () => { io.disconnect(); cancelAnimationFrame(raf) }
+  }, [to, duration, isNum])
   return (
-    <div className="stat">
-      <div className="num">{accent ? <em>{value}</em> : value}</div>
+    <div className="stat" ref={ref}>
+      <div className="num">{isNum ? <>{val}<em>{suffix}</em></> : value}</div>
       <div className="label">{label}</div>
     </div>
   )

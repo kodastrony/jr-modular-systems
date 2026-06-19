@@ -572,7 +572,7 @@ export const PRESETS = [
   {
     id: 'ushape', name: 'Kształt U', icon: 'u', floors: 1,
     desc: 'Trzy skrzydła wokół dziedzińca',
-    cladding: 'anthracite', roof: 'flat',
+    cladding: 'graphite', roof: 'flat',
     build: () => [
       // base (front) row of 3
       h20(0, 0), h20(1, 0), h20(2, 0),
@@ -607,7 +607,7 @@ export const PRESETS = [
   {
     id: 'stacked', name: 'Piętrowy 2×2', icon: 'stack', floors: 2,
     desc: 'Parter 2×2 i identyczne piętro',
-    cladding: 'panel', roof: 'flat',
+    cladding: 'graphite', roof: 'flat',
     build: () => [
       ...rowOf20(2, 0, 0), ...rowOf20(2, 1, 0),
       ...rowOf20(2, 0, 1), ...rowOf20(2, 1, 1),
@@ -628,7 +628,7 @@ export const PRESETS = [
   {
     id: 'cantilever', name: 'Wspornik', icon: 'cant', floors: 2,
     desc: 'Górny moduł na wysięgu — zadaszenie',
-    cladding: 'anthracite', roof: 'flat',
+    cladding: 'graphite', roof: 'flat',
     build: () => [
       // ground: two 40' side by side
       { type: 'm40', cx: 0, cz: 0, floor: 0, rot: 0 },
@@ -641,7 +641,7 @@ export const PRESETS = [
   {
     id: 'storage', name: 'Self-storage', icon: 'storage', floors: 1,
     desc: 'Dwa rzędy boksów z aleją',
-    cladding: 'silver', roof: 'flat',
+    cladding: 'white', roof: 'flat',
     build: () => [
       ...rowOf20(5, 0, 0),
       ...rowOf20(5, 2, 0), // gap row (alley) between r=0 and r=2
@@ -660,7 +660,7 @@ export const PRESETS = [
   {
     id: 'tower', name: 'Wieża 3 piętra', icon: 'tower', floors: 3,
     desc: 'Kompaktowy hotel / biuro na małej działce',
-    cladding: 'anthracite', roof: 'flat',
+    cladding: 'graphite', roof: 'flat',
     build: () => [
       ...rowOf20(2, 0, 0), ...rowOf20(2, 1, 0),
       ...rowOf20(2, 0, 1), ...rowOf20(2, 1, 1),

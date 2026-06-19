@@ -48,12 +48,23 @@ function fileProtocolFriendly() {
   }
 }
 
-// base: './' + single-file build so dist/index.html opens straight from disk
-// (file://) by double-click, with no dev server. Media stays alongside in
-// dist/media and is referenced with relative paths.
-export default defineConfig({
-  base: './',
-  plugins: [react(), viteSingleFile(), fileProtocolFriendly(), devShot()],
-  server: { port: 5173, host: true },
-  build: { chunkSizeWarningLimit: 4000 },
+// Two build shapes (base: './' keeps assets relative; HashRouter keeps the URL
+// path at root, so relative asset URLs always resolve):
+//   • default `vite build` → ONE inlined index.html that opens straight from disk
+//     (file://) by double-click, no server needed. This is the everyday build.
+//   • `vite build --mode web` → code-split. Content pages skip the heavy Three.js
+//     bundle (the 3D configurator is a lazy chunk) — fast on weak devices, for
+//     hosting on Cloudflare / GitHub Pages (where a server loads the chunks).
+export default defineConfig(({ mode }) => {
+  const singlefile = mode !== 'web'
+  return {
+    base: './',
+    plugins: [
+      react(),
+      ...(singlefile ? [viteSingleFile(), fileProtocolFriendly()] : []),
+      devShot(),
+    ],
+    server: { port: 5173, host: true },
+    build: { chunkSizeWarningLimit: 4000 },
+  }
 })

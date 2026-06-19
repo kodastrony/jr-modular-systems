@@ -36,20 +36,16 @@ export const VARIANTS = [
 export const variantById = Object.fromEntries(VARIANTS.map((v) => [v.id, v]))
 export const variantGroups = [...new Set(VARIANTS.map((v) => v.group))]
 
-/* ---- exterior cladding ---- */
+/* ---- exterior cladding ----
+   Deliberately small palette (client brief): graphite-grey, white and the two
+   wood/board finishes only — no coloured steel. `graphite` is the default finish
+   and the canonical fallback id used across the 3D scenes, so it must remain
+   first (and keep the original #3b3e44 grey — the client's standard look). */
 export const CLADDINGS = [
-  { id: 'graphite', name: 'Stal grafit', kind: 'corrugated', color: '#3b3e44' },
-  { id: 'anthracite', name: 'Antracyt', kind: 'corrugated', color: '#26282d' },
-  { id: 'white', name: 'Biel', kind: 'corrugated', color: '#e9e8e4' },
-  { id: 'silver', name: 'Srebrny', kind: 'corrugated', color: '#aeb2b6' },
-  { id: 'rust', name: 'Ceglasta czerwień', kind: 'corrugated', color: '#9c3f30' },
-  { id: 'olive', name: 'Oliwka', kind: 'corrugated', color: '#5a5f44' },
-  { id: 'sand', name: 'Piaskowy', kind: 'corrugated', color: '#c9b896' },
-  { id: 'wood', name: 'Drewno', kind: 'wood', color: '#b07a41' },
+  { id: 'graphite', name: 'Grafit', kind: 'corrugated', color: '#3b3e44' },
+  { id: 'white', name: 'Biały', kind: 'corrugated', color: '#e9e8e4' },
+  { id: 'wood', name: 'Drewno jasne', kind: 'wood', color: '#b8824a' },
   { id: 'wood-dark', name: 'Drewno ciemne', kind: 'wood', color: '#6e4a2c' },
-  { id: 'panel', name: 'Panel kompozyt', kind: 'panel', color: '#41464d' },
-  { id: 'render', name: 'Tynk biały', kind: 'render', color: '#eceae4' },
-  { id: 'render-dark', name: 'Tynk grafit', kind: 'render', color: '#4a4d52' },
 ]
 export const claddingById = Object.fromEntries(CLADDINGS.map((c) => [c.id, c]))
 
@@ -92,21 +88,21 @@ export const PRESETS = [
     modules: [{ v: 'residential', s: '40' }, { v: 'window-band', s: '20' }] },
   { id: 'przedszkole', name: 'Przedszkole', icon: 'sportowy.png', tier: 'plus', cladding: 'white', roof: 'gable',
     modules: [{ v: 'windows', s: '40' }, { v: 'door-window', s: '40' }, { v: 'window-band', s: '20' }] },
-  { id: 'biuro', name: 'Biuro', icon: 'sales.png', tier: 'plus', cladding: 'anthracite', roof: 'flat',
+  { id: 'biuro', name: 'Biuro', icon: 'sales.png', tier: 'plus', cladding: 'graphite', roof: 'flat',
     modules: [{ v: 'window-band', s: '40' }, { v: 'door-window', s: '20' }] },
-  { id: 'gastro', name: 'Gastronomia / bar', icon: 'gastro.png', tier: 'plus', cladding: 'rust', roof: 'flat',
+  { id: 'gastro', name: 'Gastronomia / bar', icon: 'gastro.png', tier: 'plus', cladding: 'graphite', roof: 'flat',
     modules: [{ v: 'open', s: '20' }, { v: 'shopfront', s: '20' }] },
   { id: 'sklep', name: 'Sklep / handel', icon: 'maly_sklep.png', tier: 'eco', cladding: 'white', roof: 'parapet',
     modules: [{ v: 'shopfront', s: '40' }, { v: 'door', s: '20' }] },
-  { id: 'hotel', name: 'Hotel modułowy', icon: 'hotel.png', tier: 'plus', cladding: 'panel', roof: 'flat',
+  { id: 'hotel', name: 'Hotel modułowy', icon: 'hotel.png', tier: 'plus', cladding: 'graphite', roof: 'flat',
     modules: [{ v: 'window', s: '20' }, { v: 'window', s: '20' }, { v: 'door-window', s: '20' }] },
-  { id: 'magazyn', name: 'Self storage', icon: 'magazyn.png', tier: 'eco', cladding: 'silver', roof: 'flat',
+  { id: 'magazyn', name: 'Self storage', icon: 'magazyn.png', tier: 'eco', cladding: 'white', roof: 'flat',
     modules: [{ v: 'rollup', s: '40' }, { v: 'double-door', s: '20' }] },
   { id: 'serwer', name: 'Serwerownia', icon: 'serwer.png', tier: 'premium', cladding: 'graphite', roof: 'flat',
     modules: [{ v: 'louver', s: '20' }] },
   { id: 'sauna', name: 'Sauna / wellness', icon: 'sauna.png', tier: 'premium', cladding: 'wood-dark', roof: 'flat',
     modules: [{ v: 'glazed', s: '20' }, { v: 'door', s: '20' }] },
-  { id: 'silownia', name: 'Siłownia', icon: 'silownia.png', tier: 'plus', cladding: 'anthracite', roof: 'flat',
+  { id: 'silownia', name: 'Siłownia', icon: 'silownia.png', tier: 'plus', cladding: 'graphite', roof: 'flat',
     modules: [{ v: 'window-band', s: '40' }, { v: 'door', s: '20' }] },
   { id: 'inny', name: 'Inny obiekt', icon: 'inne.png', tier: 'plus', cladding: 'graphite', roof: 'flat',
     modules: [{ v: 'door-window', s: '20' }] },

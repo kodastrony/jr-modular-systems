@@ -34,7 +34,8 @@ export const company = {
 
 export const media = {
   heroVideo: 'media/video/jr-web.mp4',
-  heroLoop: 'media/video/jr-hero-1080.mp4',
+  heroLoop: 'media/video/jr-hero-desk.mp4',         // 1080→720p, ~4.7 MB (behind a dark gradient)
+  heroLoopMobile: 'media/video/jr-hero-mobile.mp4', // 540p, ~2.5 MB — served ≤760px
   poster: IMG('video-poster.jpg'),
 }
 

@@ -7,7 +7,7 @@ import PresentModule from './PresentModule.jsx'
 import { claddingTex, tiled } from '../textures.js'
 import {
   CELL, MODULE_H, FLOOR_H, FOUNDATION_H, buildBounds, claddingById, cellKey,
-  roofRectangles, exposedTopCells, bayWorld, bayKey, solarWorld, solarKey,
+  roofRectangles, exposedTopCells, bayWorld, bayKey, solarKey,
   terraceWorld, terraceKey, DOOR, WINDOW,
 } from '../../data/builder.js'
 
@@ -26,7 +26,9 @@ function sharedGlass() {
 function useMats() {
   const mats = useMemo(() => ({
     cast: new THREE.MeshStandardMaterial({ color: '#202327', roughness: 0.5, metalness: 0.8 }),
-    frame: new THREE.MeshStandardMaterial({ color: '#2b2e33', roughness: 0.45, metalness: 0.6 }),
+    // the frame rails / corner posts share planes with the cladding box; a polygon
+    // offset makes them win the depth test consistently → no z-fighting flicker
+    frame: new THREE.MeshStandardMaterial({ color: '#2b2e33', roughness: 0.45, metalness: 0.6, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }),
     door: new THREE.MeshStandardMaterial({ color: '#34383d', roughness: 0.5, metalness: 0.4 }),
     floorPan: new THREE.MeshStandardMaterial({ color: '#1a1c1f', roughness: 0.9, metalness: 0.2 }),
     interior: new THREE.MeshStandardMaterial({ color: '#3a3f48', roughness: 0.92, metalness: 0.05 }),
@@ -55,11 +57,11 @@ function useBodies(cladding) {
       const bump = tiled(pair.bump, rx, ry)
       return new THREE.MeshStandardMaterial({
         map, bumpMap: bump,
-        bumpScale: k === 'corrugated' ? 0.05 : k === 'panel' ? 0.04 : k === 'wood' ? 0.03 : 0.012,
+        bumpScale: k === 'corrugated' ? 0.04 : k === 'panel' ? 0.035 : k === 'wood' ? 0.03 : 0.012,
         color: clad.color,
-        roughness: k === 'render' ? 0.9 : k === 'wood' ? 0.72 : 0.42,
-        metalness: k === 'corrugated' || k === 'panel' ? 0.5 : 0.06,
-        envMapIntensity: 0.9,
+        roughness: k === 'render' ? 0.9 : k === 'wood' ? 0.72 : 0.5,
+        metalness: k === 'corrugated' || k === 'panel' ? 0.4 : 0.06,
+        envMapIntensity: 0.85,
       })
     }
     return { m20: make(6), m40: make(12) }
@@ -80,9 +82,15 @@ function boundaryEdges(cellSet) {
   return edges
 }
 
-function RoofLayer({ modules, type, mats }) {
+function RoofLayer({ modules, type, mats, cladColor }) {
   const rects = useMemo(() => roofRectangles(modules), [modules])
   const byLevel = useMemo(() => exposedTopCells(modules), [modules])
+  // material for the triangular gable-end walls (matches the cladding colour)
+  const endMat = useMemo(
+    () => new THREE.MeshStandardMaterial({ color: cladColor || '#3b3e44', roughness: 0.6, metalness: 0.2, side: THREE.DoubleSide }),
+    [cladColor]
+  )
+  useEffect(() => () => endMat.dispose(), [endMat])
 
   return (
     <group>
@@ -94,16 +102,21 @@ function RoofLayer({ modules, type, mats }) {
           const rise = Math.min(short * 0.4, 1.4)
           const ang = Math.atan2(rise, short / 2)
           const slant = Math.hypot(short / 2, rise)
+          // triangular gable-end walls close the attic so it never reads as hollow
+          const endShape = new THREE.Shape()
+          endShape.moveTo(-short / 2, -0.06); endShape.lineTo(short / 2, -0.06); endShape.lineTo(0, rise); endShape.closePath()
           return (
             <group key={i} position={[r.cx, r.y + 0.04, r.cz]} rotation={[0, ridgeAlongX ? 0 : Math.PI / 2, 0]}>
               <mesh position={[0, rise / 2, long / 4 * 0 + short / 4]} rotation={[ang, 0, 0]} castShadow material={mats.roof}><boxGeometry args={[long + 0.16, 0.1, slant + 0.06]} /></mesh>
               <mesh position={[0, rise / 2, -short / 4]} rotation={[-ang, 0, 0]} castShadow material={mats.roof}><boxGeometry args={[long + 0.16, 0.1, slant + 0.06]} /></mesh>
               <mesh position={[0, rise + 0.02, 0]} material={mats.cast}><boxGeometry args={[long + 0.18, 0.07, 0.09]} /></mesh>
+              <mesh position={[long / 2 - 0.04, 0, 0]} rotation={[0, Math.PI / 2, 0]} material={endMat} castShadow receiveShadow><shapeGeometry args={[endShape]} /></mesh>
+              <mesh position={[-(long / 2 - 0.04), 0, 0]} rotation={[0, -Math.PI / 2, 0]} material={endMat} castShadow receiveShadow><shapeGeometry args={[endShape]} /></mesh>
             </group>
           )
         }
-        // flat + parapet share the slab
-        return <mesh key={i} position={[r.cx, r.y + 0.05, r.cz]} material={mats.roof} castShadow receiveShadow><boxGeometry args={[r.sx + 0.06, 0.1, r.sz + 0.06]} /></mesh>
+        // flat + parapet share the slab — lifted clear of the module top + top rail
+        return <mesh key={i} position={[r.cx, r.y + 0.09, r.cz]} material={mats.roof} castShadow receiveShadow><boxGeometry args={[r.sx + 0.06, 0.1, r.sz + 0.06]} /></mesh>
       })}
 
       {/* parapet on the true roof outline (per storey) */}
@@ -160,13 +173,43 @@ function OpeningsLayer({ openings, mats }) {
   })
 }
 
-/* ---- client-placed solar panels (on the exact roof cells) ---- */
-function SolarLayer({ solar, mats }) {
+/* Where a solar panel sits, given the roof type. On flat/parapet roofs it rests
+   just above the slab with a slight tilt. On a GABLE roof it must lie ON the
+   pitch — find the roof rectangle the cell belongs to, work out which slope it is
+   on and how high up that slope, and tilt the panel to match the gable angle so
+   it never clips into the roof. */
+function solarPlacement(cell, rects, roofType) {
+  const cx = (cell.x + 0.5) * CELL
+  const cz = (cell.z + 0.5) * CELL
+  const topY = FOUNDATION_H + cell.floor * FLOOR_H + MODULE_H
+  const flat = { pos: [cx, topY + 0.17, cz], rot: [-0.3, 0, 0] }
+  if (roofType !== 'gable') return flat
+
+  const r = rects.find((rr) => Math.abs(rr.y - topY) < 0.02
+    && Math.abs(cx - rr.cx) <= rr.sx / 2 + 1e-3 && Math.abs(cz - rr.cz) <= rr.sz / 2 + 1e-3)
+  if (!r) return flat
+
+  const ridgeAlongX = r.sx >= r.sz          // ridge runs along the longer axis
+  const short = Math.min(r.sx, r.sz)
+  const rise = Math.min(short * 0.4, 1.4)
+  const ang = Math.atan2(rise, short / 2)
+  const off = ridgeAlongX ? cz - r.cz : cx - r.cx   // signed distance from the ridge
+  const side = off >= 0 ? 1 : -1
+  const d = Math.min(Math.abs(off), short / 2)
+  const y = r.y + 0.04 + rise * (1 - d / (short / 2)) + 0.10 / Math.cos(ang)
+  // tilt the panel to lie along the slope (about the ridge axis)
+  const rot = ridgeAlongX ? [side * ang, 0, 0] : [0, 0, -side * ang]
+  return { pos: [cx, y, cz], rot }
+}
+
+/* ---- client-placed solar panels (follow the roof: flat or on the gable pitch) ---- */
+function SolarLayer({ solar, modules, roofType, mats }) {
+  const rects = useMemo(() => roofRectangles(modules), [modules])
   return solar.map((c) => {
-    const w = solarWorld(c)
+    const t = solarPlacement(c, rects, roofType)
     return (
-      <mesh key={solarKey(c)} position={[w.cx, w.y + 0.11, w.cz]} rotation={[-0.34, 0, 0]} material={mats.solar} castShadow>
-        <boxGeometry args={[CELL * 0.92, 0.05, CELL * 0.92]} />
+      <mesh key={solarKey(c)} position={t.pos} rotation={t.rot} material={mats.solar} castShadow>
+        <boxGeometry args={[CELL * 0.9, 0.04, CELL * 0.9]} />
       </mesh>
     )
   })
@@ -251,13 +294,16 @@ export default function PresentScene({ modules, openings = [], solar = [], terra
 
   const [cx, cz] = bounds.center
   const groundR = Math.max(60, Math.max(bounds.size[0], bounds.size[1]) * 3)
+  // halve the shadow map on phones — a 2048² map is a real cost on weak GPUs
+  const shadowMap = (typeof window !== 'undefined' && window.matchMedia
+    && window.matchMedia('(max-width: 760px)').matches) ? 1024 : 2048
 
   return (
     <group>
       <hemisphereLight args={['#eef3f8', '#5a5f54', 0.75]} />
       <directionalLight
         position={[cx + 26, 34, cz + 18]} intensity={2.7} color="#fff6ea" castShadow
-        shadow-mapSize-width={2048} shadow-mapSize-height={2048}
+        shadow-mapSize-width={shadowMap} shadow-mapSize-height={shadowMap}
         shadow-camera-near={1} shadow-camera-far={140}
         shadow-camera-left={-50} shadow-camera-right={50} shadow-camera-top={50} shadow-camera-bottom={-50}
         shadow-bias={-0.0004}
@@ -275,11 +321,11 @@ export default function PresentScene({ modules, openings = [], solar = [], terra
       {modules.map((m) => <PresentModule key={m.id} mod={m} mats={mats} body={bodies[m.type]} />)}
 
       {/* building-level roof — only over exposed columns (never under a stacked module) */}
-      <RoofLayer modules={modules} type={finish?.roof || 'flat'} mats={mats} />
+      <RoofLayer modules={modules} type={finish?.roof || 'flat'} mats={mats} cladColor={claddingById[finish?.cladding]?.color} />
 
       {/* client-placed add-ons, rendered exactly where they were designed */}
       <OpeningsLayer openings={openings} mats={mats} />
-      <SolarLayer solar={solar} mats={mats} />
+      <SolarLayer solar={solar} modules={modules} roofType={finish?.roof || 'flat'} mats={mats} />
       <TerraceLayer terrace={terrace} mats={mats} />
 
       <ContactShadows position={[0, FOUNDATION_H * 0.5, 0]} scale={groundR} blur={2.4} far={18} opacity={0.5} resolution={1024} color="#0a0c10" />

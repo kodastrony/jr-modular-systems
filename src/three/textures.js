@@ -21,9 +21,10 @@ function toTex(canvas, srgb = true) {
   return t
 }
 
-/* trapezoidal / corrugated steel: flat colour + sinusoidal rib bump */
+/* trapezoidal / corrugated steel: flat colour + sinusoidal rib bump.
+   Dimensions are power-of-two so mipmaps generate cleanly (no rib shimmer). */
 function corrugated() {
-  const W = 512, H = 192, ribs = 24, rw = W / ribs
+  const W = 512, H = 256, ribs = 24, rw = W / ribs
   const cc = canvasOf(W, H), x = cc.getContext('2d')
   x.fillStyle = '#bcbcbc'; x.fillRect(0, 0, W, H)
   for (let i = 0; i < 1100; i++) { x.fillStyle = `rgba(0,0,0,${Math.random() * 0.022})`; x.fillRect(Math.random() * W, Math.random() * H, 2, 1) }
@@ -142,11 +143,17 @@ export function claddingTex(kind) {
   return t[kind] || t.corrugated
 }
 
-/* clone + independently tile a texture for a given face size */
+/* clone + independently tile a texture for a given face size. Mipmaps +
+   anisotropy are forced on the clone so tiled ribs/planks never alias or shimmer
+   when the camera moves (the "miganie" the client reported on the walls). */
 export function tiled(base, rx, ry) {
   const t = base.clone()
-  t.needsUpdate = true
   t.wrapS = t.wrapT = THREE.RepeatWrapping
   t.repeat.set(rx, ry)
+  t.anisotropy = 16
+  t.generateMipmaps = true
+  t.minFilter = THREE.LinearMipmapLinearFilter
+  t.magFilter = THREE.LinearFilter
+  t.needsUpdate = true
   return t
 }

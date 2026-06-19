@@ -143,7 +143,7 @@ function BuildCamera({ controlsRef, apiRef, modules }) {
 }
 
 export default function BuildScene({
-  modules, openings = [], solar = [], terrace = [], finish, activeFloor, tool, rot, selectedId, hover,
+  modules, openings = [], solar = [], terrace = [], activeFloor, tool, rot, selectedId, hover,
   onPlace, onSelectModule, onEraseModule, onPlaceOpening, onPlaceSolar, onPlaceTerrace, onEraseElement,
   onHover, onHint, cameraApiRef,
 }) {
@@ -160,7 +160,9 @@ export default function BuildScene({
   const geo = useUnitBox()
 
   const cat = toolCat(tool)
-  const cladColor = B.claddingById[finish?.cladding]?.color || '#3b3e44'
+  // the build editor is schematic — boxes are always a neutral grey, regardless of
+  // the cladding colour chosen in the visualisation (colour only applies in present mode)
+  const moduleGrey = '#646b75'
   const occ = useMemo(() => B.occupancyByFloor(modules), [modules])
   const bays = useMemo(() => (cat === 'opening' ? B.exteriorBays(modules) : []), [cat, modules])
   const roofCs = useMemo(() => (cat === 'solar' ? B.roofCells(modules) : []), [cat, modules])
@@ -417,7 +419,7 @@ export default function BuildScene({
       {/* placed containers — all storeys always visible so roofs are clickable */}
       <group ref={modulesGroupRef}>
         {modules.map((m) => (
-          <BuildModule key={m.id} mod={m} geo={geo} color={cladColor} dim={false}
+          <BuildModule key={m.id} mod={m} geo={geo} color={moduleGrey} dim={false}
             selected={m.id === selectedId}
             hover={cat === 'pick' && hover?.kind === 'module' && hover.id === m.id}
             eraseMode={eraseMode} />

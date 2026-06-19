@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 
-/* Scroll-reveal wrapper using IntersectionObserver. */
-export default function Reveal({ children, as: Tag = 'div', delay = 0, className = '', ...props }) {
+/* Scroll-reveal wrapper using IntersectionObserver.
+   `variant` selects the entrance motion: 'up' (default) | 'scale' | 'left' | 'right'. */
+export default function Reveal({ children, as: Tag = 'div', delay = 0, variant, className = '', ...props }) {
   const ref = useRef(null)
   const [shown, setShown] = useState(false)
   useEffect(() => {
@@ -22,6 +23,7 @@ export default function Reveal({ children, as: Tag = 'div', delay = 0, className
   return (
     <Tag
       ref={ref}
+      data-reveal={variant || undefined}
       className={`reveal ${shown ? 'in' : ''} ${className}`}
       style={{ transitionDelay: `${delay}ms`, ...(props.style || {}) }}
       {...props}

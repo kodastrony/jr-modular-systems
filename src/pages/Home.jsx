@@ -5,6 +5,25 @@ import { SectionHead, Stat, OfferCard } from '../components/UI.jsx'
 import { Cube, Arrow, ArrowUpRight, Play } from '../components/Icons.jsx'
 import { company, heroBadges, offer, processSteps, realizacje, clients, faq, media } from '../data/content.js'
 
+const mq = (q) => typeof window !== 'undefined' && window.matchMedia && window.matchMedia(q).matches
+
+/* Skip the video and show only the poster when motion is unwanted or the
+   connection is metered/slow — so weak networks never pull megabytes of video. */
+function preferStill() {
+  if (mq('(prefers-reduced-motion: reduce)')) return true
+  const c = typeof navigator !== 'undefined' && navigator.connection
+  return !!(c && (c.saveData || /(^|[^0-9])2g$/.test(c.effectiveType || '')))
+}
+
+/* Hero background: a muted autoplay loop (plays on mobile via playsInline), with a
+   lighter 540p source on small screens and a static poster as the fallback. The
+   poster paints instantly under the video, so first paint is never blocked. */
+function HeroMedia() {
+  if (preferStill()) return <img src={media.poster} alt="" fetchpriority="high" />
+  const src = (mq('(max-width: 760px)') && media.heroLoopMobile) || media.heroLoop
+  return <video src={src} poster={media.poster} autoPlay muted loop playsInline preload="metadata" />
+}
+
 export default function Home() {
   const [playing, setPlaying] = useState(false)
 
@@ -13,11 +32,11 @@ export default function Home() {
       {/* ---------- HERO ---------- */}
       <section className="hero">
         <div className="hero-media">
-          <video src={media.heroLoop} poster={media.poster} autoPlay muted loop playsInline />
+          <HeroMedia />
         </div>
         <div className="hero-inner">
           <div className="container">
-            <Reveal>
+            <div className="hero-copy">
               <span className="eyebrow" style={{ color: 'var(--accent-2)' }}>{company.hashtag}</span>
               <h1 className="display h1" style={{ marginTop: 18 }}>{company.tagline}</h1>
               <p className="lead">Producent budynków modułowych — domy, przedszkola, salony samochodowe, biura i gastronomia z kontenerów. Zaprojektuj swój obiekt w interaktywnym konfiguratorze 3D.</p>
@@ -30,7 +49,7 @@ export default function Home() {
                   <span className="hero-badge" key={b}><span className="dot" /> {b}</span>
                 ))}
               </div>
-            </Reveal>
+            </div>
           </div>
         </div>
         <div className="scroll-cue"><div className="mouse" /><span>Przewiń</span></div>
@@ -62,10 +81,10 @@ export default function Home() {
       <section className="section-sm">
         <div className="container">
           <Reveal className="stats">
-            <Stat value={<>27<em>+</em></>} label="Zrealizowanych obiektów" />
-            <Stat value={<>50<em>%</em></>} label="Krótszy czas realizacji" />
-            <Stat value={<>24<em>h</em></>} label="Reakcja serwisu" />
-            <Stat value={<>2<em> tyg.</em></>} label="Realizacja prostych obiektów" />
+            <Stat to={27} suffix="+" label="Zrealizowanych obiektów" />
+            <Stat to={50} suffix="%" label="Krótszy czas realizacji" />
+            <Stat to={24} suffix="h" label="Reakcja serwisu" />
+            <Stat to={2} suffix=" tyg." label="Realizacja prostych obiektów" />
           </Reveal>
         </div>
       </section>
@@ -115,7 +134,7 @@ export default function Home() {
           <div className="bento">
             {realizacje.slice(0, 5).map((r, i) => (
               <Reveal key={r.title} delay={i * 50} className={i === 0 ? 'span-2 row-2' : ''}>
-                <Link to="/realizacje" className={`tile ${i === 0 ? 'tall' : ''}`} style={{ minHeight: i === 0 ? '100%' : 290, height: '100%' }}>
+                <Link to="/realizacje" className={`tile ${i === 0 ? 'tall' : ''}`} style={{ minHeight: i === 0 ? 380 : 290, height: '100%' }}>
                   <img src={r.img} alt={r.title} loading="lazy" />
                   <div className="tile-body">
                     <h3 style={{ fontSize: i === 0 ? '1.8rem' : '1.3rem' }}>{r.title}</h3>

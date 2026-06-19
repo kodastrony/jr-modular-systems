@@ -9,7 +9,6 @@ import {
 } from '../components/Icons.jsx'
 import * as B from '../data/builder.js'
 
-const STORAGE_KEY = 'jr-konfigurator-v3'
 const FLOOR_LABEL = ['Parter', '1. piętro', '2. piętro', '3. piętro']
 
 const ADDON_TOOLS = [
@@ -26,7 +25,7 @@ const EMPTY_ADDONS = { openings: [], solar: [], terrace: [] }
 class SceneBoundary extends Component {
   constructor(p) { super(p); this.state = { err: null } }
   static getDerivedStateFromError(err) { return { err } }
-  reset = () => { try { localStorage.removeItem(STORAGE_KEY) } catch { /* ignore */ } location.reload() }
+  reset = () => { location.reload() }
   render() {
     if (this.state.err) {
       return (
@@ -67,22 +66,9 @@ function reducer(state, action) {
 }
 
 function initState() {
-  // Start on an empty plot — no auto-placed containers when entering the configurator.
-  let project = { modules: [], ...EMPTY_ADDONS, finish: { ...DEFAULT_FINISH } }
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null')
-    if (saved && Array.isArray(saved.modules) && saved.modules.length) {
-      // re-stamp ids through nextId so the sequence never collides with new ones
-      const modules = saved.modules.map((m) => ({ ...m, id: B.nextId() }))
-      project = B.pruneAddons({
-        modules,
-        openings: Array.isArray(saved.openings) ? saved.openings : [],
-        solar: Array.isArray(saved.solar) ? saved.solar : [],
-        terrace: Array.isArray(saved.terrace) ? saved.terrace : [],
-        finish: { ...DEFAULT_FINISH, ...(saved.finish || {}) },
-      })
-    }
-  } catch { /* ignore */ }
+  // Always open on a fresh, empty plot — the configurator never restores a
+  // previous session, so every visit starts from a clean configuration.
+  const project = { modules: [], ...EMPTY_ADDONS, finish: { ...DEFAULT_FINISH } }
   return { project, past: [], future: [] }
 }
 
@@ -104,6 +90,7 @@ export default function Configurator() {
   const [toast, setToast] = useState(null)    // transient action message
   const [ready, setReady] = useState(false)
   const [exportData, setExportData] = useState(null)
+  const [sheetOpen, setSheetOpen] = useState(false) // mobile bottom-sheet expand state
 
   const cameraApiRef = useRef(null)
   const captureRef = useRef(null)
@@ -124,11 +111,6 @@ export default function Configurator() {
   }, [modules])
   const price = useMemo(() => B.computePrice(project), [project])
   const occ = useMemo(() => B.occupancyByFloor(modules), [modules])
-
-  /* ---- persistence ---- */
-  useEffect(() => {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(project)) } catch { /* ignore */ }
-  }, [project])
 
   /* ---- helpers ---- */
   const showToast = useCallback((msg) => {
@@ -268,10 +250,11 @@ export default function Configurator() {
     if (!modules.length) { showToast('Najpierw postaw choć jeden moduł'); return }
     setSelectedId(null)
     setHint(null)
+    setSheetOpen(false) // reveal the fresh visualisation first on mobile
     setMode('present')
   }, [modules.length, showToast])
 
-  const editAgain = useCallback(() => { setMode('build'); setExportData(null) }, [])
+  const editAgain = useCallback(() => { setMode('build'); setExportData(null); setSheetOpen(false) }, [])
   const openExport = useCallback(() => {
     setExportData({ url: captureRef.current ? captureRef.current() : null })
   }, [])
@@ -282,7 +265,6 @@ export default function Configurator() {
   const goToContact = useCallback(() => {
     const clad = B.claddingById[finish.cladding]?.name || '—'
     const roof = B.roofById[finish.roof]?.name || '—'
-    const tier = B.tierById[finish.tier]?.name || '—'
     const doors = openings.filter((o) => o.type === 'door').length
     const windows = openings.filter((o) => o.type === 'window').length
     const addons = [
@@ -291,12 +273,12 @@ export default function Configurator() {
     ].filter(Boolean)
     const summary = [
       `Moduły: ${modules.length} szt.`, `Kondygnacje: ${floors}`, `Powierzchnia: ~${area} m²`,
-      `Elewacja: ${clad}`, `Dach: ${roof}`, `Standard: ${tier}`,
+      `Elewacja: ${clad}`, `Dach: ${roof}`,
       addons.length ? `Dodatki: ${addons.join(', ')}` : '',
     ].filter(Boolean).join('\n')
 
     const payload = (image) => {
-      const data = { summary, image, stats: { modules: modules.length, floors, area, cladding: clad, roof, tier, addons }, ts: Date.now() }
+      const data = { summary, image, stats: { modules: modules.length, floors, area, cladding: clad, roof, addons }, ts: Date.now() }
       try { sessionStorage.setItem('jr-cfg-handoff', JSON.stringify(data)) }
       catch { try { sessionStorage.setItem('jr-cfg-handoff', JSON.stringify({ ...data, image: null })) } catch { /* ignore */ } }
       navigate('/kontakt')
@@ -395,8 +377,9 @@ export default function Configurator() {
             openings, solar, terrace, past, future, hintText, toast,
             selectTool, setRot, setActiveFloor, clearAll, generate,
             dispatch, cameraApiRef, eraseModule, rotateModule, moveFloor, duplicateModule, setSelectedId,
+            sheetOpen, setSheetOpen,
           }} />
-        : <PresentUI {...{ area, floors, price, finish, patchFinish, editAgain, openExport, goToContact, cameraApiRef }} />}
+        : <PresentUI {...{ area, floors, price, finish, patchFinish, editAgain, openExport, goToContact, cameraApiRef, sheetOpen, setSheetOpen }} />}
 
       {!ready && (
         <div className="cfg-loader">
@@ -420,6 +403,7 @@ function BuildUI({
   openings, solar, terrace, past, future, hintText, toast,
   selectTool, setRot, setActiveFloor, clearAll, generate,
   dispatch, cameraApiRef, eraseModule, rotateModule, moveFloor, duplicateModule, setSelectedId,
+  sheetOpen, setSheetOpen,
 }) {
   const empty = !modules.length && !openings.length && !solar.length && !terrace.length
   const addonCount = openings.length + solar.length + terrace.length
@@ -427,19 +411,23 @@ function BuildUI({
     <div className="cfg-ui">
       {/* top bar */}
       <header className="cfg-bar">
-        <Link to="/" className="cfg-pill ghost"><Arrow style={{ width: 15, height: 15, transform: 'scaleX(-1)' }} /> Strona główna</Link>
+        <Link to="/" className="cfg-pill ghost" aria-label="Strona główna"><Arrow style={{ width: 15, height: 15, transform: 'scaleX(-1)' }} /> <span className="cfg-pill-lbl">Strona główna</span></Link>
         <div className="cfg-brand"><img src={company.logoMark} alt="" /> Kreator <span className="muted">3D</span></div>
         <div className="cfg-bar-spacer" />
         <span className="cfg-meta">{modules.length} mod. · ~{area} m² · {floors} kond.{addonCount ? ` · ${addonCount} dod.` : ''}</span>
         <div className="cfg-iconbtns">
-          <button className="cfg-iconbtn" disabled={!past.length} onClick={() => dispatch({ type: 'undo' })} title="Cofnij (Ctrl+Z)"><Undo /></button>
-          <button className="cfg-iconbtn" disabled={!future.length} onClick={() => dispatch({ type: 'redo' })} title="Ponów (Ctrl+Y)"><Redo /></button>
+          <button className="cfg-iconbtn" disabled={!past.length} onClick={() => dispatch({ type: 'undo' })} title="Cofnij (Ctrl+Z)" aria-label="Cofnij"><Undo /></button>
+          <button className="cfg-iconbtn" disabled={!future.length} onClick={() => dispatch({ type: 'redo' })} title="Ponów (Ctrl+Y)" aria-label="Ponów"><Redo /></button>
         </div>
-        <button className="cfg-pill primary" onClick={generate}><Wand style={{ width: 16, height: 16 }} /> Generuj wizualizację</button>
+        <button className="cfg-pill primary" onClick={generate}><Wand style={{ width: 16, height: 16 }} /> <span className="cfg-pill-lbl">Generuj wizualizację</span></button>
       </header>
 
-      {/* left dock */}
-      <div className="cfg-console builder">
+      {/* left dock (becomes a collapsible bottom sheet on mobile) */}
+      <div className={`cfg-console builder ${sheetOpen ? 'open' : ''}`}>
+        <SheetHandle open={sheetOpen} onToggle={() => setSheetOpen((o) => !o)} meta={`${modules.length} mod. · ~${area} m²`} />
+        <div className="cfg-sheet-cta">
+          <button className="cfg-pill primary wide" onClick={generate}><Wand style={{ width: 16, height: 16 }} /> Generuj wizualizację</button>
+        </div>
         <div className="cfg-console-body">
           <section className="bld-sec">
             <div className="bld-h">Narzędzie</div>
@@ -504,8 +492,8 @@ function BuildUI({
 
       {/* camera controls */}
       <div className="bld-camera">
-        <button className="cfg-iconbtn solid" onClick={() => cameraApiRef.current?.fit()} title="Dopasuj (F)"><Fit /></button>
-        <button className="cfg-iconbtn solid" onClick={() => cameraApiRef.current?.topView()} title="Widok z góry"><TopDown /></button>
+        <button className="cfg-iconbtn solid" onClick={() => cameraApiRef.current?.fit()} title="Dopasuj (F)" aria-label="Dopasuj widok"><Fit /></button>
+        <button className="cfg-iconbtn solid" onClick={() => cameraApiRef.current?.topView()} title="Widok z góry" aria-label="Widok z góry"><TopDown /></button>
       </div>
 
       {/* empty-state coach + live hint + toast */}
@@ -525,19 +513,23 @@ function BuildUI({
 /* =================================================================
    PRESENT MODE UI
    ================================================================= */
-function PresentUI({ area, floors, price, finish, patchFinish, editAgain, openExport, goToContact, cameraApiRef }) {
+function PresentUI({ area, floors, price, finish, patchFinish, editAgain, openExport, goToContact, cameraApiRef, sheetOpen, setSheetOpen }) {
   return (
     <div className="cfg-ui">
       <header className="cfg-bar">
-        <button className="cfg-pill ghost" onClick={editAgain}><Arrow style={{ width: 15, height: 15, transform: 'scaleX(-1)' }} /> Edytuj projekt</button>
+        <button className="cfg-pill ghost" onClick={editAgain} aria-label="Edytuj projekt"><Arrow style={{ width: 15, height: 15, transform: 'scaleX(-1)' }} /> <span className="cfg-pill-lbl">Edytuj projekt</span></button>
         <div className="cfg-brand"><img src={company.logoMark} alt="" /> Wizualizacja <span className="muted">3D</span></div>
         <div className="cfg-bar-spacer" />
         <span className="cfg-meta">~{area} m² · {floors} kond.</span>
-        <button className="cfg-pill ghost" onClick={openExport}><Download style={{ width: 16, height: 16 }} /> Zapisz</button>
-        <button className="cfg-pill primary" onClick={goToContact}><Mail style={{ width: 16, height: 16 }} /> Zamów wycenę</button>
+        <button className="cfg-pill ghost" onClick={openExport} aria-label="Zapisz projekt"><Download style={{ width: 16, height: 16 }} /> <span className="cfg-pill-lbl">Zapisz</span></button>
+        <button className="cfg-pill primary" onClick={goToContact}><Mail style={{ width: 16, height: 16 }} /> <span className="cfg-pill-lbl">Zamów wycenę</span></button>
       </header>
 
-      <div className="cfg-console present">
+      <div className={`cfg-console present ${sheetOpen ? 'open' : ''}`}>
+        <SheetHandle open={sheetOpen} onToggle={() => setSheetOpen((o) => !o)} meta={`~${area} m² · ${floors} kond.`} />
+        <div className="cfg-sheet-cta">
+          <button className="cfg-pill primary wide" onClick={goToContact}><Mail style={{ width: 16, height: 16 }} /> Zamów wycenę</button>
+        </div>
         <div className="cfg-console-body">
           <section className="bld-sec">
             <div className="bld-h">Elewacja</div>
@@ -559,14 +551,6 @@ function PresentUI({ area, floors, price, finish, patchFinish, editAgain, openEx
             </div>
           </section>
           <section className="bld-sec">
-            <div className="bld-h">Standard</div>
-            <div className="cfg-row">
-              {B.TIERS.map((t) => (
-                <button key={t.id} className={`cfg-opt ${finish.tier === t.id ? 'active' : ''}`} onClick={() => patchFinish({ tier: t.id })} title={t.desc}>{t.name}</button>
-              ))}
-            </div>
-          </section>
-          <section className="bld-sec">
             <div className="bld-h">Zestawienie dodatków</div>
             <div className="cfg-summary-rows">
               <div className="cfg-srow"><span className="k">Drzwi · okna</span><span className="v">{price.doors} · {price.windows}</span></div>
@@ -583,11 +567,28 @@ function PresentUI({ area, floors, price, finish, patchFinish, editAgain, openEx
       </div>
 
       <div className="bld-camera">
-        <button className="cfg-iconbtn solid" onClick={() => cameraApiRef.current?.iso?.()} title="Widok 3D"><Fit /></button>
-        <button className="cfg-iconbtn solid" onClick={() => cameraApiRef.current?.front?.()} title="Z przodu"><Layers /></button>
-        <button className="cfg-iconbtn solid" onClick={() => cameraApiRef.current?.top?.()} title="Z góry"><TopDown /></button>
+        <button className="cfg-iconbtn solid" onClick={() => cameraApiRef.current?.iso?.()} title="Widok 3D" aria-label="Widok 3D"><Fit /></button>
+        <button className="cfg-iconbtn solid" onClick={() => cameraApiRef.current?.front?.()} title="Z przodu" aria-label="Widok z przodu"><Layers /></button>
+        <button className="cfg-iconbtn solid" onClick={() => cameraApiRef.current?.top?.()} title="Z góry" aria-label="Widok z góry"><TopDown /></button>
       </div>
     </div>
+  )
+}
+
+/* ---------------- mobile bottom-sheet handle ---------------- */
+/* Renders only on small screens (CSS-gated). The grip toggles the sheet between
+   a slim peek (handle + primary CTA) and the full tool panel, so the 3D scene
+   stays visible and the main action is always one tap away. */
+function SheetHandle({ open, onToggle, meta }) {
+  return (
+    <button className="cfg-sheet-head" onClick={onToggle} aria-expanded={open} aria-label={open ? 'Zwiń panel narzędzi' : 'Rozwiń panel narzędzi'}>
+      <span className="cfg-sheet-grip" aria-hidden />
+      <span className="cfg-sheet-row">
+        <span className="cfg-sheet-lbl">{open ? 'Zwiń panel' : 'Narzędzia i opcje'}</span>
+        {meta && <span className="cfg-sheet-meta">{meta}</span>}
+        <ChevronUp className={`cfg-sheet-chev ${open ? 'down' : ''}`} style={{ width: 18, height: 18 }} />
+      </span>
+    </button>
   )
 }
 
@@ -638,6 +639,12 @@ function ExportModal({ data, project, stats, onClose, onContact }) {
   ].filter(Boolean)
   const addons = addonParts
 
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [onClose])
+
   const download = () => {
     if (!data.url) return
     const a = document.createElement('a')
@@ -668,9 +675,9 @@ function ExportModal({ data, project, stats, onClose, onContact }) {
   }
   return (
     <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
+      <div className="modal" role="dialog" aria-modal="true" aria-labelledby="export-title" onClick={(e) => e.stopPropagation()}>
         <div className="modal-head">
-          <h3>Twój projekt</h3>
+          <h3 id="export-title">Twój projekt</h3>
           <button className="modal-close" onClick={onClose}><Close style={{ width: 18, height: 18 }} /></button>
         </div>
         <div className="modal-body">
