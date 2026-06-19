@@ -26,48 +26,36 @@ export function OfferView({ item }) {
         </div>
       </section>
 
-      {/* highlights chips */}
-      <section className="section-sm">
+      {/* Co zyskujesz — direct facts, no wall of text */}
+      <section className="section" style={{ paddingTop: 'clamp(40px,5vw,72px)' }}>
         <div className="container">
-          <Reveal className="chips">
-            {item.highlights.map((h) => <span key={h} className="chip"><Check style={{ width: 15, height: 15, color: 'var(--accent)', display: 'inline', verticalAlign: '-2px', marginRight: 6 }} />{h}</span>)}
-          </Reveal>
-        </div>
-      </section>
-
-      {/* prose sections + gallery alternating */}
-      <section className="section" style={{ paddingTop: 10 }}>
-        <div className="container">
-          {item.sections.map((s, i) => (
-            <Reveal key={i} className="feature-row" style={{ marginBottom: 'clamp(40px,6vw,90px)', flexDirection: i % 2 ? 'row-reverse' : 'row' }}>
-              {item.gallery[i] && (
-                <div className="feature-media" style={{ order: i % 2 ? 2 : 0 }}>
-                  <img src={item.gallery[i]} alt={s.heading} loading="lazy" />
-                </div>
-              )}
-              <div className="feature-text prose">
-                {s.heading && <h2 className="h3" style={{ marginBottom: 16 }}>{s.heading}</h2>}
-                {s.paragraphs.map((p, j) => <p key={j}>{p}</p>)}
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* gallery grid (remaining images) */}
-      {item.gallery.length > item.sections.length && (
-        <section className="section-sm soft">
-          <div className="container">
-            <div className="grid cols-3">
-              {item.gallery.slice(item.sections.length).map((g, i) => (
-                <Reveal key={i} delay={i * 50}>
-                  <div className="card" style={{ aspectRatio: '4/3' }}><img src={g} alt="" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /></div>
-                </Reveal>
-              ))}
-            </div>
+          <Reveal as="h2" className="h3" style={{ marginBottom: 26 }}>Co zyskujesz</Reveal>
+          <div className="offer-facts">
+            {item.highlights.map((h, i) => (
+              <Reveal key={h} delay={i * 40} className="offer-fact">
+                <span className="offer-fact-ic"><Check /></span>
+                <span>{h}</span>
+              </Reveal>
+            ))}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
+
+      {/* gallery — let the realisations speak */}
+      <section className="section-sm soft">
+        <div className="container">
+          <Reveal as="h2" className="h3" style={{ marginBottom: 24 }}>Wybrane realizacje</Reveal>
+          <div className="offer-gallery">
+            {item.gallery.map((g, i) => (
+              <Reveal key={i} delay={i * 40}>
+                <div className="card" style={{ aspectRatio: '4 / 3', overflow: 'hidden' }}>
+                  <img src={g} alt={`${item.title} — realizacja ${i + 1}`} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* cross-sell */}
       <section className="section">

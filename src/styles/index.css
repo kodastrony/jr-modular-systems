@@ -344,6 +344,14 @@ section { position: relative; }
 .offer-card p { color: var(--muted); font-size: 0.95rem; margin-top: 8px; line-height: 1.5; flex: 1; }
 .offer-card .more { margin-top: 16px; }
 
+/* offer detail — scannable facts + gallery (no wall of text) */
+.offer-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+.offer-fact { display: flex; align-items: center; gap: 14px; padding: 17px 20px; border-radius: var(--r-md); background: var(--bg-soft); border: 1px solid var(--line-2); }
+.offer-fact-ic { flex: none; width: 34px; height: 34px; border-radius: 10px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; }
+.offer-fact-ic svg { width: 18px; height: 18px; }
+.offer-fact > span:last-child { font-weight: 500; color: var(--ink); line-height: 1.3; }
+.offer-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+
 /* big feature tile (image with overlaid text, Apple bento) */
 .tile {
   position: relative; border-radius: var(--r-lg); overflow: hidden; min-height: 440px; display: flex;
