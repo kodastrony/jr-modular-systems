@@ -2,7 +2,9 @@ import { Suspense, lazy, useEffect } from 'react'
 import { Canvas, invalidate, useThree } from '@react-three/fiber'
 import { AdaptiveDpr } from '@react-three/drei'
 import * as THREE from 'three'
-import BuildScene from './BuildScene.jsx'
+import BuildScene, { BUILD_BG, makeSkyTexture } from './BuildScene.jsx'
+
+const PRESENT_BG = '#aeb6c0'
 
 const PresentScene = lazy(() => import('./PresentScene.jsx'))
 
@@ -50,7 +52,7 @@ export default function ConfiguratorCanvas(props) {
       camera={{ position: [18, 18, 18], fov: 32, near: 0.1, far: 1200 }}
       gl={{ antialias: true, alpha: false, preserveDrawingBuffer: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.05 }}
       onCreated={({ scene }) => {
-        scene.background = new THREE.Color(mode === 'present' ? '#aeb6c0' : '#2b2f38')
+        scene.background = new THREE.Color(mode === 'present' ? PRESENT_BG : BUILD_BG)
         onReady?.()
         requestAnimationFrame(() => { window.dispatchEvent(new Event('resize')); invalidate() })
       }}
@@ -70,8 +72,20 @@ export default function ConfiguratorCanvas(props) {
   )
 }
 
+/* Build mode gets a soft radial-gradient "sky" (set imperatively, since a texture
+   background can't be a declarative <color>); present mode keeps its flat tone. */
 function BackgroundSync({ mode }) {
-  return (
-    <color attach="background" args={[mode === 'present' ? '#aeb6c0' : '#2b2f38']} />
-  )
+  const { scene } = useThree()
+  useEffect(() => {
+    let tex = null
+    if (mode === 'present') {
+      scene.background = new THREE.Color(PRESENT_BG)
+    } else {
+      tex = makeSkyTexture()
+      scene.background = tex || new THREE.Color(BUILD_BG)
+    }
+    invalidate()
+    return () => { if (tex) tex.dispose() }
+  }, [mode, scene])
+  return null
 }

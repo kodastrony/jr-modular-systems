@@ -1,6 +1,6 @@
 import { useMemo, useRef, useEffect, useCallback, useState } from 'react'
 import { useThree, invalidate } from '@react-three/fiber'
-import { OrbitControls, Edges } from '@react-three/drei'
+import { CameraControls, Edges } from '@react-three/drei'
 import * as THREE from 'three'
 import DotGrid from './DotGrid.jsx'
 import * as B from '../../data/builder.js'
@@ -12,6 +12,36 @@ const C_WARN = new THREE.Color('#f3a431')
 const C_INVALID = new THREE.Color('#ff4d4f')
 const CLICK_PX = 9, CLICK_MS = 800
 const floorY = (f) => FOUNDATION_H + f * FLOOR_H
+const prefersReduced = () => typeof window !== 'undefined' && window.matchMedia
+  && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+/* build-mode scenery palette — a refined DARK studio. One cohesive blue-grey
+   family: a soft radial-gradient sky, a ground that fades into it (no ugly second
+   square), and a slightly-lighter build "lot" with a thin border as the focal stage.
+   Slightly brighter & cleaner than the first dark pass; the warm yellow accent +
+   dark glass dock tie it to the marketing site. */
+export const BUILD_BG = '#313c4a'   // fog target / present fallback ref (mid blue-grey)
+const C_GROUND = '#374352'          // ground outside the lot — lifted brighter, ≈ sky, fog-fades (no "second square")
+const C_PLATE = '#435061'           // the build lot (the nice, slightly-lighter square)
+const C_PLATE_EDGE = '#566a87'      // thin lot border (defines the buildable area)
+const C_GRID = '#9aa6ba'            // light dot grid on the plate
+
+/* radial-gradient backdrop (soft glow behind the model → vignette at the edges),
+   so the "sky" reads as an intentional studio, not a flat grey wall */
+export function makeSkyTexture() {
+  if (typeof document === 'undefined') return null
+  const s = 512
+  const cv = document.createElement('canvas'); cv.width = cv.height = s
+  const ctx = cv.getContext('2d')
+  const g = ctx.createRadialGradient(s * 0.5, s * 0.44, s * 0.06, s * 0.5, s * 0.52, s * 0.62)
+  g.addColorStop(0, '#3b4858')   // soft glow centre
+  g.addColorStop(1, '#313c4a')   // gentle vignette (lifted brighter)
+  ctx.fillStyle = g; ctx.fillRect(0, 0, s, s)
+  const tex = new THREE.CanvasTexture(cv)
+  tex.colorSpace = THREE.SRGBColorSpace
+  return tex
+}
+
 
 const CONTAINER = new Set(['m20', 'm40'])
 const OPENING = new Set(['door', 'window'])
@@ -29,7 +59,7 @@ function BuildModule({ mod, geo, color, dim, selected, hover, eraseMode }) {
   }, [color, dim])
   useEffect(() => () => mat.dispose(), [mat])
   const hot = hover ? (eraseMode ? '#ff4d4f' : '#ff7a3d') : null
-  const edgeColor = selected ? '#f0581f' : hot || (dim ? '#5a6172' : '#11151c')
+  const edgeColor = selected ? '#f0581f' : hot || (dim ? '#5a6172' : '#0f131a')
   return (
     <group position={[pos[0], pos[1], pos[2]]} userData={{ kind: 'module', id: mod.id }}>
       <mesh geometry={geo} material={mat} scale={[sx, MODULE_H, sz]} userData={{ kind: 'module', id: mod.id }}>
@@ -117,28 +147,59 @@ function RoofGrid({ cells, solar }) {
   })
 }
 
-/* ── camera framing + imperative API ──────────────────────────── */
+/* ── camera framing + imperative API ──────────────────────────────
+   Uses CameraControls.setLookAt with built-in eased transitions, so the
+   view buttons glide instead of teleporting. Under frameloop="demand" we
+   kick the first frame with invalidate(); CameraControls then self-sustains
+   the tween (each internal update dispatches → drei invalidates → next frame). */
 function BuildCamera({ controlsRef, apiRef, modules }) {
-  const { camera } = useThree()
   const bounds = useMemo(() => B.buildBounds(modules), [modules])
-  const frame = useCallback((topDown = false) => {
+  const frame = useCallback((topDown = false, transition = true) => {
     const ctrl = controlsRef.current
     if (!ctrl) return
+    if (prefersReduced()) transition = false
+
+    // empty plot → a pulled-back iso overview of the whole build area, composed a
+    // little to the left, so you see the full plot and can start building right away
+    if (modules.length === 0 && !topDown) {
+      // symmetric iso establishing overview. -x look-at = screen-LEFT (+x = right).
+      const d = PLOT_M * 1.35          // zoom kept
+      const e = d * 0.6
+      const camPos = new THREE.Vector3(e, d * 0.62, e)        // flatter angled iso
+      const tgt = new THREE.Vector3(-d * 0.03, 4, 0)          // -x = slightly left
+      // pure VERTICAL pan (no zoom, no tilt): translate camera+target along the
+      // camera's up axis. +panY moves the rig up → the plot slides DOWN in the frame.
+      const panY = d * -0.1
+      const fwd = new THREE.Vector3().subVectors(tgt, camPos).normalize()
+      const right = new THREE.Vector3().crossVectors(fwd, new THREE.Vector3(0, 1, 0)).normalize()
+      const up = new THREE.Vector3().crossVectors(right, fwd).normalize()
+      camPos.addScaledVector(up, panY)
+      tgt.addScaledVector(up, panY)
+      ctrl.setLookAt(camPos.x, camPos.y, camPos.z, tgt.x, tgt.y, tgt.z, transition)
+      invalidate()
+      return
+      invalidate()
+      return
+    }
+
     const [cx, cz] = bounds.center
-    const span = Math.max(bounds.size[0], bounds.size[1], 6)
-    const dist = span * (topDown ? 1.15 : 1.5) + 9 + bounds.height
+    const span = Math.max(bounds.size[0], bounds.size[1], 13)
+    const dist = span * (topDown ? 1.4 : 1.75) + 21 + bounds.height
     const ty = bounds.height * 0.42
-    ctrl.target.set(cx, ty, cz)
-    if (topDown) camera.position.set(cx + 0.001, ty + dist, cz)
-    else camera.position.set(cx + dist * 0.62, ty + dist * 0.74, cz + dist * 0.62)
-    camera.updateProjectionMatrix(); ctrl.update(); invalidate()
-  }, [bounds, camera, controlsRef])
+    if (topDown) ctrl.setLookAt(cx + 0.001, ty + dist, cz, cx, ty, cz, transition)
+    else ctrl.setLookAt(cx + dist * 0.62, ty + dist * 0.74, cz + dist * 0.62, cx, ty, cz, transition)
+    invalidate()
+  }, [bounds, controlsRef, modules.length])
   useEffect(() => {
-    if (apiRef) apiRef.current = { fit: () => frame(false), topView: () => frame(true) }
+    if (apiRef) apiRef.current = {
+      fit: () => frame(false),
+      topView: () => frame(true),
+      zoom: (delta) => { controlsRef.current?.dolly(delta, true); invalidate() },
+    }
     return () => { if (apiRef) apiRef.current = null }
-  }, [apiRef, frame])
+  }, [apiRef, frame, controlsRef])
   const did = useRef(false)
-  useEffect(() => { if (!did.current) { did.current = true; frame(false) } }, [frame])
+  useEffect(() => { if (!did.current) { did.current = true; frame(false, false) } }, [frame])
   return null
 }
 
@@ -161,11 +222,13 @@ export default function BuildScene({
 
   const cat = toolCat(tool)
   // the build editor is schematic — boxes are always a neutral grey, regardless of
-  // the cladding colour chosen in the visualisation (colour only applies in present mode)
-  const moduleGrey = '#646b75'
+  // the cladding colour chosen in the visualisation (colour only applies in present mode).
+  // a medium cool-grey sits clearly above the dark plate as an architectural massing model.
+  const moduleGrey = '#737b89'
   const occ = useMemo(() => B.occupancyByFloor(modules), [modules])
   const bays = useMemo(() => (cat === 'opening' ? B.exteriorBays(modules) : []), [cat, modules])
   const roofCs = useMemo(() => (cat === 'solar' ? B.roofCells(modules) : []), [cat, modules])
+
 
   // ghost / preview state (throttled to cell changes — cheap)
   const [ghostBay, setGhostBay] = useState(null)        // opening tool: bay under cursor
@@ -384,9 +447,11 @@ export default function BuildScene({
     }
   }, [gl, camera, raycaster, plane])
 
-  // reset transient ghosts on tool / floor change
+  // reset transient ghosts on tool / floor change. The container ghost stays HIDDEN
+  // until the pointer actually positions it (moveGhostContainer shows it) — otherwise
+  // it would render at the origin, half-sunk through the floor, on first load.
   useEffect(() => {
-    if (ghostRef.current) ghostRef.current.visible = cat === 'container'
+    if (ghostRef.current) ghostRef.current.visible = false
     lastCell.current = { cx: NaN, cz: NaN }
     lastBayKey.current = null; lastPrevKey.current = null
     setGhostBay(null); setPreviewCells([])
@@ -399,22 +464,32 @@ export default function BuildScene({
 
   return (
     <group>
-      <hemisphereLight args={['#eef3fa', '#4a5160', 1.05]} />
-      <directionalLight position={[18, 26, 12]} intensity={1.3} color="#fff6ec" />
-      <directionalLight position={[-14, 12, -10]} intensity={0.45} color="#cfe0f0" />
-      <ambientLight intensity={0.45} />
+      <fog attach="fog" args={[BUILD_BG, PLOT_M * 0.5, PLOT_M * 1.25]} />
 
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} raycast={() => null}>
-        <planeGeometry args={[PLOT_M * 1.6, PLOT_M * 1.6]} />
-        <meshBasicMaterial color="#2b303a" />
+      {/* dark studio lighting: soft sky/ground bounce + warm key (gives the massing form) + cool rim */}
+      <hemisphereLight args={['#dfe8f5', '#2a3140', 0.7]} />
+      <directionalLight position={[22, 30, 14]} intensity={1.2} color="#fff4e6" />
+      <directionalLight position={[-18, 14, -12]} intensity={0.42} color="#cdd8ea" />
+      <ambientLight intensity={0.38} />
+
+      {/* ground — ≈ the sky tone, fog-fades into the backdrop so there is no distinct
+          "second square" beyond the buildable lot */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.03, 0]} raycast={() => null}>
+        <planeGeometry args={[PLOT_M * 4, PLOT_M * 4]} />
+        <meshStandardMaterial color={C_GROUND} roughness={1} metalness={0} />
       </mesh>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.005, 0]} raycast={() => null}>
+      {/* build lot — the focal square: a thin border ring + a slightly-lighter plate */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.012, 0]} raycast={() => null}>
+        <planeGeometry args={[PLOT_M + 0.55, PLOT_M + 0.55]} />
+        <meshBasicMaterial color={C_PLATE_EDGE} transparent opacity={0.6} toneMapped={false} />
+      </mesh>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} raycast={() => null} receiveShadow>
         <planeGeometry args={[PLOT_M, PLOT_M]} />
-        <meshBasicMaterial color="#3a4252" transparent opacity={0.55} />
+        <meshStandardMaterial color={C_PLATE} roughness={0.96} metalness={0} />
       </mesh>
 
       {/* ground dot lattice (containers auto-stack onto roofs) */}
-      <DotGrid y={0.01} opacity={0.6} />
+      <DotGrid y={0.014} color={C_GRID} opacity={0.55} />
 
       {/* placed containers — all storeys always visible so roofs are clickable */}
       <group ref={modulesGroupRef}>
@@ -441,9 +516,9 @@ export default function BuildScene({
       {cat === 'opening' && <group ref={bayTargetsRef}><BayGrid bays={bays} openings={openings} /></group>}
       {cat === 'solar' && <group ref={roofTargetsRef}><RoofGrid cells={roofCs} solar={solar} /></group>}
 
-      {/* container ghost */}
+      {/* container ghost (starts hidden — shown only once the pointer positions it) */}
       {ghostDims && (
-        <mesh ref={ghostRef} geometry={geo} scale={[ghostDims[0], MODULE_H, ghostDims[1]]} raycast={() => null} renderOrder={3}>
+        <mesh ref={ghostRef} visible={false} geometry={geo} scale={[ghostDims[0], MODULE_H, ghostDims[1]]} raycast={() => null} renderOrder={3}>
           <meshBasicMaterial ref={ghostMatRef} color={C_VALID} transparent opacity={0.5} depthWrite={false} />
           <Edges threshold={15} color="#ffffff" renderOrder={4} raycast={() => null} />
         </mesh>
@@ -481,12 +556,11 @@ export default function BuildScene({
       })}
 
       <BuildCamera controlsRef={controlsRef} apiRef={cameraApiRef} modules={modules} />
-      <OrbitControls
-        ref={controlsRef} makeDefault enablePan enableDamping dampingFactor={0.12}
-        minDistance={5} maxDistance={PLOT_M * 1.3} maxPolarAngle={Math.PI * 0.49} zoomToCursor
-        onChange={() => invalidate()}
-        mouseButtons={{ LEFT: THREE.MOUSE.ROTATE, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.PAN }}
-        touches={{ ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN }}
+      <CameraControls
+        ref={controlsRef} makeDefault
+        minDistance={5} maxDistance={PLOT_M * 2.7} maxPolarAngle={Math.PI * 0.49}
+        dollyToCursor smoothTime={0.32} draggingSmoothTime={0.12}
+        azimuthRotateSpeed={0.85} polarRotateSpeed={0.85}
       />
     </group>
   )
