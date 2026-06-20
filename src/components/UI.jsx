@@ -10,7 +10,7 @@ const prefersReduced = typeof window !== 'undefined' && window.matchMedia
 export function SectionHead({ eyebrow, title, lead, center, light }) {
   return (
     <Reveal className={`section-head ${center ? 'center' : ''}`}>
-      {eyebrow && <span className={`eyebrow ${light ? '' : ''}`}>{eyebrow}</span>}
+      {eyebrow && <span className="eyebrow">{eyebrow}</span>}
       <h2 className="h2 balance">{title}</h2>
       {lead && <p className="lead balance">{lead}</p>}
     </Reveal>

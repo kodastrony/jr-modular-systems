@@ -479,15 +479,15 @@ function BuildUI({
       {selected && (
         <div className="cfg-editor">
           <span className="lab">{B.moduleTypeById[selected.type]?.name} · {FLOOR_LABEL[selected.floor]}</span>
-          <button className="x" onClick={() => rotateModule(selected.id)} title="Obróć"><Rotate style={{ width: 17, height: 17 }} /></button>
-          <button className="x" onClick={() => duplicateModule(selected.id)} title="Duplikuj"><Plus style={{ width: 17, height: 17 }} /></button>
+          <button className="x" onClick={() => rotateModule(selected.id)} title="Obróć" aria-label="Obróć moduł"><Rotate style={{ width: 17, height: 17 }} /></button>
+          <button className="x" onClick={() => duplicateModule(selected.id)} title="Duplikuj" aria-label="Duplikuj moduł"><Plus style={{ width: 17, height: 17 }} /></button>
           <div className="cfg-seg-row">
-            <button className="cfg-seg-btn" onClick={() => moveFloor(selected.id, -1)} disabled={selected.floor === 0} title="Niżej"><ChevronDown style={{ width: 15, height: 15 }} /></button>
+            <button className="cfg-seg-btn" onClick={() => moveFloor(selected.id, -1)} disabled={selected.floor === 0} title="Niżej" aria-label="Przenieś piętro niżej"><ChevronDown style={{ width: 15, height: 15 }} /></button>
             <span style={{ minWidth: 16, textAlign: 'center', fontSize: '0.82rem', fontWeight: 600 }}>{selected.floor + 1}</span>
-            <button className="cfg-seg-btn" onClick={() => moveFloor(selected.id, 1)} disabled={selected.floor >= B.MAX_FLOORS - 1} title="Wyżej"><ChevronUp style={{ width: 15, height: 15 }} /></button>
+            <button className="cfg-seg-btn" onClick={() => moveFloor(selected.id, 1)} disabled={selected.floor >= B.MAX_FLOORS - 1} title="Wyżej" aria-label="Przenieś piętro wyżej"><ChevronUp style={{ width: 15, height: 15 }} /></button>
           </div>
-          <button className="x del" onClick={() => eraseModule(selected.id)} title="Usuń"><Trash style={{ width: 16, height: 16 }} /></button>
-          <button className="x" onClick={() => setSelectedId(null)} title="Zamknij"><Close style={{ width: 16, height: 16 }} /></button>
+          <button className="x del" onClick={() => eraseModule(selected.id)} title="Usuń" aria-label="Usuń moduł"><Trash style={{ width: 16, height: 16 }} /></button>
+          <button className="x" onClick={() => setSelectedId(null)} title="Zamknij" aria-label="Zamknij edytor"><Close style={{ width: 16, height: 16 }} /></button>
         </div>
       )}
 
@@ -536,7 +536,7 @@ function PresentUI({ area, floors, price, finish, patchFinish, editAgain, openEx
             <div className="bld-h">Elewacja</div>
             <div className="cfg-row">
               {B.CLADDINGS.map((c) => (
-                <button key={c.id} className={`cfg-swatch-lg ${finish.cladding === c.id ? 'active' : ''}`} onClick={() => patchFinish({ cladding: c.id })}>
+                <button key={c.id} className={`cfg-swatch-lg ${finish.cladding === c.id ? 'active' : ''}`} aria-pressed={finish.cladding === c.id} onClick={() => patchFinish({ cladding: c.id })}>
                   <div className="sw" style={{ background: c.color }} />
                   <span>{c.name}</span>
                 </button>
@@ -547,7 +547,7 @@ function PresentUI({ area, floors, price, finish, patchFinish, editAgain, openEx
             <div className="bld-h">Dach</div>
             <div className="cfg-row">
               {B.ROOFS.map((r) => (
-                <button key={r.id} className={`cfg-opt ${finish.roof === r.id ? 'active' : ''}`} onClick={() => patchFinish({ roof: r.id })}>{r.name}</button>
+                <button key={r.id} className={`cfg-opt ${finish.roof === r.id ? 'active' : ''}`} aria-pressed={finish.roof === r.id} onClick={() => patchFinish({ roof: r.id })}>{r.name}</button>
               ))}
             </div>
           </section>
@@ -634,11 +634,10 @@ function ExportModal({ data, project, stats, onClose, onContact }) {
   const clad = B.claddingById[finish.cladding]?.name
   const roof = B.roofById[finish.roof]?.name
   const p = stats.price
-  const addonParts = [
+  const addons = [
     p.doors ? `${p.doors} drzwi` : '', p.windows ? `${p.windows} okien` : '',
     p.solar ? `${p.solar} paneli PV` : '', p.terrace ? `${p.terrace} kafli tarasu` : '',
   ].filter(Boolean)
-  const addons = addonParts
 
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') onClose() }

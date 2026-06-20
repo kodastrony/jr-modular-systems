@@ -47,7 +47,7 @@ export default function Home() {
               </div>
               <div className="hero-badges">
                 {heroBadges.map((b) => (
-                  <span className="hero-badge" key={b}><span className="dot" /> {b}</span>
+                  <span className="hero-badge" key={b}><span className="dot" aria-hidden="true" /> {b}</span>
                 ))}
               </div>
             </div>
@@ -68,7 +68,7 @@ export default function Home() {
             </p>
             <div className="cfg-cta-points">
               {['Kilkanaście wariantów modułów', 'Podgląd 3D na żywo', 'Wycena bez zobowiązań'].map((t) => (
-                <span className="hero-badge" key={t} style={{ color: 'var(--on-dark-soft)' }}><span className="dot" /> {t}</span>
+                <span className="hero-badge" key={t} style={{ color: 'var(--on-dark-soft)' }}><span className="dot" aria-hidden="true" /> {t}</span>
               ))}
             </div>
             <div style={{ marginTop: 36 }}>

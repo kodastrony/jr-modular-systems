@@ -178,8 +178,6 @@ function BuildCamera({ controlsRef, apiRef, modules }) {
       ctrl.setLookAt(camPos.x, camPos.y, camPos.z, tgt.x, tgt.y, tgt.z, transition)
       invalidate()
       return
-      invalidate()
-      return
     }
 
     const [cx, cz] = bounds.center
