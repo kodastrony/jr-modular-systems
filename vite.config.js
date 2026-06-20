@@ -55,28 +55,23 @@ function fileProtocolFriendly() {
 //   • `vite build --mode web` → code-split. Content pages skip the heavy Three.js
 //     bundle (the 3D configurator is a lazy chunk) — fast on weak devices, for
 //     hosting on Cloudflare / GitHub Pages (where a server loads the chunks).
-export default defineConfig(({ mode, command }) => {
+export default defineConfig(({ mode }) => {
   // Build shapes:
-  //   • default `vite build` (production) → single inlined index.html, HashRouter,
-  //     relative base. This is what Cloudflare's git build serves at
-  //     jr-modular-systems.kodastrony.pl today (and opens from file://). It still
-  //     carries all the SEO: site-wide JSON-LD in index.html + the runtime <Seo>
-  //     head manager. Under HashRouter every clean URL renders Home and canonicals
-  //     to "/", so Google consolidates to one richly-marked-up page (no dup harm).
-  //   • `--mode hosted` → code-split, base '/', BrowserRouter (clean per-page URLs
-  //     + SPA fallback). The full per-page-indexable SEO build — deploy to
-  //     Cloudflare via `wrangler pages deploy` or by pointing CF's build command at
-  //     `npm run build:hosted` once the git build is unblocked.
-  //   • `--mode web` → code-split, relative base, HashRouter. GitHub-Pages mirror,
-  //     de-duplicated to the root domain via cross-domain canonical.
-  const dev = command === 'serve'
-  const hosted = mode === 'hosted'
-  const singlefile = command === 'build' && !hosted && mode !== 'web'
-  const useHash = !(hosted || dev) // BrowserRouter (clean URLs) for hosted build + dev; HashRouter otherwise
+  //   • default `vite build` (production) → code-split, base '/', BrowserRouter
+  //     (clean per-page URLs). Deployed to the Cloudflare WORKER
+  //     (jr-modular-systems.kodastrony.pl, see wrangler.jsonc) via `wrangler deploy`
+  //     / Workers Builds. SPA fallback is handled by wrangler.jsonc
+  //     `not_found_handling: single-page-application` — do NOT add a _redirects
+  //     file; Workers static assets reject the `/* -> /index.html` rule.
+  //   • `--mode web` → code-split, relative base, HashRouter. GitHub-Pages sub-path
+  //     mirror, de-duplicated to the root domain via cross-domain canonical.
+  //   • `--mode file` → single inlined index.html, HashRouter. Opens from file://.
+  const singlefile = mode === 'file'
+  const cleanUrls = mode !== 'web' && mode !== 'file' // default/production build + dev server
   return {
-    base: hosted || dev ? '/' : './',
+    base: cleanUrls ? '/' : './',
     define: {
-      __USE_HASH_ROUTER__: JSON.stringify(useHash),
+      __USE_HASH_ROUTER__: JSON.stringify(!cleanUrls),
     },
     plugins: [
       react(),
