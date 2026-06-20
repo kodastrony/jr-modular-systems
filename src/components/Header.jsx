@@ -33,7 +33,7 @@ export default function Header({ dark = false }) {
     <>
       <header className={cls}>
         <div className="nav-inner">
-          <Link to="/" className="nav-logo" aria-label="JR Modular Systems — strona główna">
+          <Link to="/" className="nav-logo">
             <Picture src={company.logoMark} alt="" sizes="44px" loading="eager" />
             <span>JR Modular<span style={{ opacity: 0.5 }}>&nbsp;Systems</span></span>
           </Link>

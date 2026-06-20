@@ -7,10 +7,13 @@
   "scripts": {
     "dev": "vite",
     "gen:images": "node scripts/gen-images.mjs",
-    "prebuild": "node scripts/gen-images.mjs",
-    "prebuild:web": "node scripts/gen-images.mjs",
+    "gen:sitemap": "node scripts/gen-sitemap.mjs",
+    "prebuild": "node scripts/gen-images.mjs && node scripts/gen-sitemap.mjs",
+    "prebuild:web": "node scripts/gen-images.mjs && node scripts/gen-sitemap.mjs",
+    "prebuild:file": "node scripts/gen-images.mjs && node scripts/gen-sitemap.mjs",
     "build": "vite build",
     "build:web": "vite build --mode web",
+    "build:file": "vite build --mode file",
     "preview": "vite preview",
     "test": "node tests/builder.selftest.mjs && node tests/builder.stress.mjs"
   },

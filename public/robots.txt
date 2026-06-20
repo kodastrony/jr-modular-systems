@@ -1,0 +1,49 @@
+# JR Modular Systems — robots.txt
+# This site wants to be found and cited: classic search engines AND AI answer
+# engines are explicitly welcome. Nothing here is private.
+
+User-agent: *
+Allow: /
+
+# --- Classic search ---
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# --- AI search / answer engines (eligible to cite this site in AI answers) ---
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+Sitemap: https://jr-modular-systems.kodastrony.pl/sitemap.xml

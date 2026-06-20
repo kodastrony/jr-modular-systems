@@ -35,14 +35,14 @@ export default function Footer() {
           </div>
 
           <div className="footer-col">
-            <h4>Oferta</h4>
+            <h3>Oferta</h3>
             {offer.slice(0, 6).map((o) => (
               <Link key={o.slug} to={`/oferta/${o.slug}`}>{o.title}</Link>
             ))}
           </div>
 
           <div className="footer-col">
-            <h4>Firma</h4>
+            <h3>Firma</h3>
             <Link to="/o-nas">O nas</Link>
             <Link to="/technologia">Technologia</Link>
             <Link to="/realizacje">Realizacje</Link>
@@ -51,7 +51,7 @@ export default function Footer() {
           </div>
 
           <div className="footer-col">
-            <h4>Kontakt</h4>
+            <h3>Kontakt</h3>
             <a href={`mailto:${company.email}`}><Mail style={{ width: 16, height: 16 }} /> {company.email}</a>
             <a href={`tel:${company.phoneHref}`}><Phone style={{ width: 16, height: 16 }} /> {company.phone}</a>
             <a href="https://www.google.com/maps/place/JR+Modular+Systems" target="_blank" rel="noreferrer"><Pin style={{ width: 16, height: 16 }} /> {company.address}</a>

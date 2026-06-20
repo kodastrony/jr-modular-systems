@@ -2,6 +2,7 @@ import { Routes, Route, useLocation, Link } from 'react-router-dom'
 import { useEffect, useState, lazy, Suspense } from 'react'
 import Layout from './components/Layout.jsx'
 import Picture from './components/Picture.jsx'
+import Seo from './components/Seo.jsx'
 import { company } from './data/content.js'
 import { Cube, Arrow } from './components/Icons.jsx'
 import Home from './pages/Home.jsx'
@@ -78,6 +79,7 @@ export default function App() {
   return (
     <>
       <ScrollToTop />
+      <Seo />
       <Routes>
         {/* Configurator is full-screen, outside the standard layout */}
         <Route path="/konfigurator" element={<ConfiguratorRoute />} />

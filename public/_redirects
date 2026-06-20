@@ -1,0 +1,4 @@
+# Cloudflare Pages SPA fallback: serve index.html for client-side routes
+# (BrowserRouter clean URLs). Static files (assets, media, sitemap.xml,
+# robots.txt) are matched before this catch-all.
+/*    /index.html    200

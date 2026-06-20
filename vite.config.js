@@ -56,9 +56,22 @@ function fileProtocolFriendly() {
 //     bundle (the 3D configurator is a lazy chunk) — fast on weak devices, for
 //     hosting on Cloudflare / GitHub Pages (where a server loads the chunks).
 export default defineConfig(({ mode }) => {
-  const singlefile = mode !== 'web'
+  // Three build shapes:
+  //   • default `vite build` (production) → code-split, base '/', BrowserRouter
+  //     (clean URLs). The hosted SEO build served at the root domain (Cloudflare
+  //     jr-modular-systems.kodastrony.pl). This is the indexable, canonical site.
+  //   • `--mode web` → code-split, relative base, HashRouter. The GitHub-Pages
+  //     sub-path mirror; de-duplicated to the root domain via cross-domain canonical.
+  //   • `--mode file` → single inlined index.html, HashRouter. Opens from file://.
+  const singlefile = mode === 'file'
+  const hostedRoot = mode !== 'web' && mode !== 'file' // production build + dev server
   return {
-    base: './',
+    base: hostedRoot ? '/' : './',
+    define: {
+      // Clean-URL BrowserRouter only for the hosted root build + dev; HashRouter
+      // for the sub-path mirror and the serverless file:// build.
+      __USE_HASH_ROUTER__: JSON.stringify(!hostedRoot),
+    },
     plugins: [
       react(),
       ...(singlefile ? [viteSingleFile(), fileProtocolFriendly()] : []),
