@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Reveal from './Reveal.jsx'
+import Picture from './Picture.jsx'
 import { Arrow, ArrowUpRight } from './Icons.jsx'
 
 const prefersReduced = typeof window !== 'undefined' && window.matchMedia
@@ -53,7 +54,7 @@ export function OfferCard({ item, delay = 0 }) {
   return (
     <Reveal delay={delay}>
       <Link to={`/oferta/${item.slug}`} className="card offer-card">
-        <div className="media"><img src={item.hero} alt={item.title} loading="lazy" /></div>
+        <div className="media"><Picture src={item.hero} alt={item.title} sizes="(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 33vw" /></div>
         <div className="body">
           <h3>{item.title}</h3>
           <p>{item.short}</p>

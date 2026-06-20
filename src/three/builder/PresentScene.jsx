@@ -240,6 +240,9 @@ function CaptureBridge({ captureRef }) {
 /* one-shot intro orbit, then idle (demand frameloop) */
 function IntroSpin({ controls }) {
   useEffect(() => {
+    // respect reduced-motion: skip the auto-orbit entirely
+    if (typeof window !== 'undefined' && window.matchMedia
+      && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     let raf, started = null
     const tick = (now) => {
       if (started === null) started = now

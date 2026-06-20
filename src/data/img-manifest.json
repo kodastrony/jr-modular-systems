@@ -1,0 +1,1424 @@
+{
+  "media/img/01.jpg": {
+    "w": 259,
+    "h": 152,
+    "variants": [
+      {
+        "u": "media/img/01-259.webp",
+        "w": 259
+      }
+    ]
+  },
+  "media/img/02.jpg": {
+    "w": 259,
+    "h": 152,
+    "variants": [
+      {
+        "u": "media/img/02-259.webp",
+        "w": 259
+      }
+    ]
+  },
+  "media/img/147809263553500200.jpg": {
+    "w": 800,
+    "h": 311,
+    "variants": [
+      {
+        "u": "media/img/147809263553500200-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/147809263553500200-800.webp",
+        "w": 800
+      }
+    ]
+  },
+  "media/img/217_1600x1600.png": {
+    "w": 1600,
+    "h": 738,
+    "variants": [
+      {
+        "u": "media/img/217_1600x1600-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/217_1600x1600-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/217_1600x1600-1200.webp",
+        "w": 1200
+      },
+      {
+        "u": "media/img/217_1600x1600-1600.webp",
+        "w": 1600
+      }
+    ]
+  },
+  "media/img/3.-projekt.jpg": {
+    "w": 1024,
+    "h": 680,
+    "variants": [
+      {
+        "u": "media/img/3.-projekt-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/3.-projekt-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/3.-projekt-1024.webp",
+        "w": 1024
+      }
+    ]
+  },
+  "media/img/Bobby-Burger-logo.png": {
+    "w": 1663,
+    "h": 1662,
+    "variants": [
+      {
+        "u": "media/img/Bobby-Burger-logo-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/Bobby-Burger-logo-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/Bobby-Burger-logo-1200.webp",
+        "w": 1200
+      },
+      {
+        "u": "media/img/Bobby-Burger-logo-1600.webp",
+        "w": 1600
+      },
+      {
+        "u": "media/img/Bobby-Burger-logo-1663.webp",
+        "w": 1663
+      }
+    ]
+  },
+  "media/img/Budynek-gastronomiczny.jpg": {
+    "w": 512,
+    "h": 640,
+    "variants": [
+      {
+        "u": "media/img/Budynek-gastronomiczny-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/Budynek-gastronomiczny-512.webp",
+        "w": 512
+      }
+    ]
+  },
+  "media/img/IMG_0647.jpg": {
+    "w": 1248,
+    "h": 1664,
+    "variants": [
+      {
+        "u": "media/img/IMG_0647-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/IMG_0647-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/IMG_0647-1200.webp",
+        "w": 1200
+      },
+      {
+        "u": "media/img/IMG_0647-1248.webp",
+        "w": 1248
+      }
+    ]
+  },
+  "media/img/IMG_4385.jpg": {
+    "w": 1248,
+    "h": 1664,
+    "variants": [
+      {
+        "u": "media/img/IMG_4385-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/IMG_4385-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/IMG_4385-1200.webp",
+        "w": 1200
+      },
+      {
+        "u": "media/img/IMG_4385-1248.webp",
+        "w": 1248
+      }
+    ]
+  },
+  "media/img/IMG_4424.jpg": {
+    "w": 1331,
+    "h": 998,
+    "variants": [
+      {
+        "u": "media/img/IMG_4424-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/IMG_4424-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/IMG_4424-1200.webp",
+        "w": 1200
+      },
+      {
+        "u": "media/img/IMG_4424-1331.webp",
+        "w": 1331
+      }
+    ]
+  },
+  "media/img/IMG_6382.jpg": {
+    "w": 768,
+    "h": 1024,
+    "variants": [
+      {
+        "u": "media/img/IMG_6382-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/IMG_6382-768.webp",
+        "w": 768
+      }
+    ]
+  },
+  "media/img/IMG_6383.jpg": {
+    "w": 768,
+    "h": 1024,
+    "variants": [
+      {
+        "u": "media/img/IMG_6383-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/IMG_6383-768.webp",
+        "w": 768
+      }
+    ]
+  },
+  "media/img/Ingka_Centres_wordmark_Blue_CMYK.png": {
+    "w": 1024,
+    "h": 534,
+    "variants": [
+      {
+        "u": "media/img/Ingka_Centres_wordmark_Blue_CMYK-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/Ingka_Centres_wordmark_Blue_CMYK-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/Ingka_Centres_wordmark_Blue_CMYK-1024.webp",
+        "w": 1024
+      }
+    ]
+  },
+  "media/img/JR-modular-LOGO-full-Y.png": {
+    "w": 300,
+    "h": 116,
+    "variants": [
+      {
+        "u": "media/img/JR-modular-LOGO-full-Y-300.webp",
+        "w": 300
+      }
+    ]
+  },
+  "media/img/JR-modular-LOGO-full.png": {
+    "w": 1287,
+    "h": 420,
+    "variants": [
+      {
+        "u": "media/img/JR-modular-LOGO-full-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/JR-modular-LOGO-full-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/JR-modular-LOGO-full-1200.webp",
+        "w": 1200
+      },
+      {
+        "u": "media/img/JR-modular-LOGO-full-1287.webp",
+        "w": 1287
+      }
+    ]
+  },
+  "media/img/Modulowa-piekarnia.jpg": {
+    "w": 640,
+    "h": 480,
+    "variants": [
+      {
+        "u": "media/img/Modulowa-piekarnia-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/Modulowa-piekarnia-640.webp",
+        "w": 640
+      }
+    ]
+  },
+  "media/img/PKL_.png": {
+    "w": 1742,
+    "h": 928,
+    "variants": [
+      {
+        "u": "media/img/PKL_-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/PKL_-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/PKL_-1200.webp",
+        "w": 1200
+      },
+      {
+        "u": "media/img/PKL_-1600.webp",
+        "w": 1600
+      },
+      {
+        "u": "media/img/PKL_-1742.webp",
+        "w": 1742
+      }
+    ]
+  },
+  "media/img/T-o-kontener.jpg": {
+    "w": 753,
+    "h": 1004,
+    "variants": [
+      {
+        "u": "media/img/T-o-kontener-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/T-o-kontener-753.webp",
+        "w": 753
+      }
+    ]
+  },
+  "media/img/Zrzut-ekranu-2023-01-30-o-22.01.54.png": {
+    "w": 683,
+    "h": 629,
+    "variants": [
+      {
+        "u": "media/img/Zrzut-ekranu-2023-01-30-o-22.01.54-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/Zrzut-ekranu-2023-01-30-o-22.01.54-683.webp",
+        "w": 683
+      }
+    ]
+  },
+  "media/img/Zrzut-ekranu-2023-03-01-o-23.11.57.png": {
+    "w": 900,
+    "h": 828,
+    "variants": [
+      {
+        "u": "media/img/Zrzut-ekranu-2023-03-01-o-23.11.57-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/Zrzut-ekranu-2023-03-01-o-23.11.57-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/Zrzut-ekranu-2023-03-01-o-23.11.57-900.webp",
+        "w": 900
+      }
+    ]
+  },
+  "media/img/Zrzut-ekranu-2023-03-17-o-12.24.55.png": {
+    "w": 546,
+    "h": 106,
+    "variants": [
+      {
+        "u": "media/img/Zrzut-ekranu-2023-03-17-o-12.24.55-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/Zrzut-ekranu-2023-03-17-o-12.24.55-546.webp",
+        "w": 546
+      }
+    ]
+  },
+  "media/img/Zrzut-ekranu-2023-03-7-o-21.16.33.png": {
+    "w": 726,
+    "h": 549,
+    "variants": [
+      {
+        "u": "media/img/Zrzut-ekranu-2023-03-7-o-21.16.33-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/Zrzut-ekranu-2023-03-7-o-21.16.33-726.webp",
+        "w": 726
+      }
+    ]
+  },
+  "media/img/b2c9a186-1692-48bd-bd24-d1525175ac2e.jpg": {
+    "w": 1331,
+    "h": 998,
+    "variants": [
+      {
+        "u": "media/img/b2c9a186-1692-48bd-bd24-d1525175ac2e-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/b2c9a186-1692-48bd-bd24-d1525175ac2e-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/b2c9a186-1692-48bd-bd24-d1525175ac2e-1200.webp",
+        "w": 1200
+      },
+      {
+        "u": "media/img/b2c9a186-1692-48bd-bd24-d1525175ac2e-1331.webp",
+        "w": 1331
+      }
+    ]
+  },
+  "media/img/bacowka.png": {
+    "w": 225,
+    "h": 225,
+    "variants": [
+      {
+        "u": "media/img/bacowka-225.webp",
+        "w": 225
+      }
+    ]
+  },
+  "media/img/bikebuilders.jpeg": {
+    "w": 225,
+    "h": 225,
+    "variants": [
+      {
+        "u": "media/img/bikebuilders-225.webp",
+        "w": 225
+      }
+    ]
+  },
+  "media/img/biuro-2.jpg": {
+    "w": 1434,
+    "h": 1075,
+    "variants": [
+      {
+        "u": "media/img/biuro-2-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/biuro-2-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/biuro-2-1200.webp",
+        "w": 1200
+      },
+      {
+        "u": "media/img/biuro-2-1434.webp",
+        "w": 1434
+      }
+    ]
+  },
+  "media/img/biuro-4.jpg": {
+    "w": 1331,
+    "h": 998,
+    "variants": [
+      {
+        "u": "media/img/biuro-4-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/biuro-4-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/biuro-4-1200.webp",
+        "w": 1200
+      },
+      {
+        "u": "media/img/biuro-4-1331.webp",
+        "w": 1331
+      }
+    ]
+  },
+  "media/img/biuro-modulowe-1-rotated.jpg": {
+    "w": 480,
+    "h": 640,
+    "variants": [
+      {
+        "u": "media/img/biuro-modulowe-1-rotated-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/biuro-modulowe-1-rotated-480.webp",
+        "w": 480
+      }
+    ]
+  },
+  "media/img/biuro-modulowe-1.jpg": {
+    "w": 225,
+    "h": 300,
+    "variants": [
+      {
+        "u": "media/img/biuro-modulowe-1-225.webp",
+        "w": 225
+      }
+    ]
+  },
+  "media/img/biuro.jpg": {
+    "w": 602,
+    "h": 640,
+    "variants": [
+      {
+        "u": "media/img/biuro-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/biuro-602.webp",
+        "w": 602
+      }
+    ]
+  },
+  "media/img/bronze_small.png": {
+    "w": 256,
+    "h": 217,
+    "variants": [
+      {
+        "u": "media/img/bronze_small-256.webp",
+        "w": 256
+      }
+    ]
+  },
+  "media/img/caloroczne-biuro-modulowe-rotated.jpg": {
+    "w": 480,
+    "h": 640,
+    "variants": [
+      {
+        "u": "media/img/caloroczne-biuro-modulowe-rotated-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/caloroczne-biuro-modulowe-rotated-480.webp",
+        "w": 480
+      }
+    ]
+  },
+  "media/img/caloroczne-biuro-modulowe.jpg": {
+    "w": 225,
+    "h": 300,
+    "variants": [
+      {
+        "u": "media/img/caloroczne-biuro-modulowe-225.webp",
+        "w": 225
+      }
+    ]
+  },
+  "media/img/cropped-JR-modular-LOGO-3D-kopia.jpg": {
+    "w": 512,
+    "h": 512,
+    "variants": [
+      {
+        "u": "media/img/cropped-JR-modular-LOGO-3D-kopia-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/cropped-JR-modular-LOGO-3D-kopia-512.webp",
+        "w": 512
+      }
+    ]
+  },
+  "media/img/cropped-JR-modular-LOGO-3D-kopia.png": {
+    "w": 270,
+    "h": 270,
+    "variants": [
+      {
+        "u": "media/img/cropped-JR-modular-LOGO-3D-kopia-270.webp",
+        "w": 270
+      }
+    ]
+  },
+  "media/img/cropped-JR-modular-LOGO-3D.png": {
+    "w": 315,
+    "h": 250,
+    "variants": [
+      {
+        "u": "media/img/cropped-JR-modular-LOGO-3D-315.webp",
+        "w": 315
+      }
+    ]
+  },
+  "media/img/dl.png": {
+    "w": 2048,
+    "h": 773,
+    "variants": [
+      {
+        "u": "media/img/dl-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/dl-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/dl-1200.webp",
+        "w": 1200
+      },
+      {
+        "u": "media/img/dl-1600.webp",
+        "w": 1600
+      },
+      {
+        "u": "media/img/dl-2048.webp",
+        "w": 2048
+      }
+    ]
+  },
+  "media/img/domek_letniskowy.png": {
+    "w": 99,
+    "h": 92,
+    "variants": [
+      {
+        "u": "media/img/domek_letniskowy-99.webp",
+        "w": 99
+      }
+    ]
+  },
+  "media/img/elewacje-wentylowane-rotated.jpg": {
+    "w": 480,
+    "h": 640,
+    "variants": [
+      {
+        "u": "media/img/elewacje-wentylowane-rotated-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/elewacje-wentylowane-rotated-480.webp",
+        "w": 480
+      }
+    ]
+  },
+  "media/img/elewacje-wentylowane.jpg": {
+    "w": 225,
+    "h": 300,
+    "variants": [
+      {
+        "u": "media/img/elewacje-wentylowane-225.webp",
+        "w": 225
+      }
+    ]
+  },
+  "media/img/energy.jpg": {
+    "w": 2048,
+    "h": 786,
+    "variants": [
+      {
+        "u": "media/img/energy-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/energy-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/energy-1200.webp",
+        "w": 1200
+      },
+      {
+        "u": "media/img/energy-1600.webp",
+        "w": 1600
+      },
+      {
+        "u": "media/img/energy-2048.webp",
+        "w": 2048
+      }
+    ]
+  },
+  "media/img/event.jpg": {
+    "w": 2048,
+    "h": 1246,
+    "variants": [
+      {
+        "u": "media/img/event-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/event-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/event-1200.webp",
+        "w": 1200
+      },
+      {
+        "u": "media/img/event-1600.webp",
+        "w": 1600
+      },
+      {
+        "u": "media/img/event-2048.webp",
+        "w": 2048
+      }
+    ]
+  },
+  "media/img/gastro-3.jpg": {
+    "w": 1600,
+    "h": 731,
+    "variants": [
+      {
+        "u": "media/img/gastro-3-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/gastro-3-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/gastro-3-1200.webp",
+        "w": 1200
+      },
+      {
+        "u": "media/img/gastro-3-1600.webp",
+        "w": 1600
+      }
+    ]
+  },
+  "media/img/gastro-5.jpg": {
+    "w": 1024,
+    "h": 1280,
+    "variants": [
+      {
+        "u": "media/img/gastro-5-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/gastro-5-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/gastro-5-1024.webp",
+        "w": 1024
+      }
+    ]
+  },
+  "media/img/gastro.png": {
+    "w": 99,
+    "h": 89,
+    "variants": [
+      {
+        "u": "media/img/gastro-99.webp",
+        "w": 99
+      }
+    ]
+  },
+  "media/img/gold_small.png": {
+    "w": 256,
+    "h": 217,
+    "variants": [
+      {
+        "u": "media/img/gold_small-256.webp",
+        "w": 256
+      }
+    ]
+  },
+  "media/img/hotel.png": {
+    "w": 99,
+    "h": 101,
+    "variants": [
+      {
+        "u": "media/img/hotel-99.webp",
+        "w": 99
+      }
+    ]
+  },
+  "media/img/inne.png": {
+    "w": 99,
+    "h": 94,
+    "variants": [
+      {
+        "u": "media/img/inne-99.webp",
+        "w": 99
+      }
+    ]
+  },
+  "media/img/komis-samochodowy-rotated.jpg": {
+    "w": 480,
+    "h": 640,
+    "variants": [
+      {
+        "u": "media/img/komis-samochodowy-rotated-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/komis-samochodowy-rotated-480.webp",
+        "w": 480
+      }
+    ]
+  },
+  "media/img/komis-samochodowy.jpg": {
+    "w": 225,
+    "h": 300,
+    "variants": [
+      {
+        "u": "media/img/komis-samochodowy-225.webp",
+        "w": 225
+      }
+    ]
+  },
+  "media/img/kontener_biurowy-e1676630577122.jpg": {
+    "w": 911,
+    "h": 1215,
+    "variants": [
+      {
+        "u": "media/img/kontener_biurowy-e1676630577122-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/kontener_biurowy-e1676630577122-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/kontener_biurowy-e1676630577122-911.webp",
+        "w": 911
+      }
+    ]
+  },
+  "media/img/kontener_sanitarny-e1676631137476.jpg": {
+    "w": 900,
+    "h": 1200,
+    "variants": [
+      {
+        "u": "media/img/kontener_sanitarny-e1676631137476-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/kontener_sanitarny-e1676631137476-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/kontener_sanitarny-e1676631137476-900.webp",
+        "w": 900
+      }
+    ]
+  },
+  "media/img/kontener_sprzedazowy-e1676630665156.jpg": {
+    "w": 868,
+    "h": 1160,
+    "variants": [
+      {
+        "u": "media/img/kontener_sprzedazowy-e1676630665156-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/kontener_sprzedazowy-e1676630665156-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/kontener_sprzedazowy-e1676630665156-868.webp",
+        "w": 868
+      }
+    ]
+  },
+  "media/img/kontenery-premium-rotated.jpg": {
+    "w": 480,
+    "h": 640,
+    "variants": [
+      {
+        "u": "media/img/kontenery-premium-rotated-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/kontenery-premium-rotated-480.webp",
+        "w": 480
+      }
+    ]
+  },
+  "media/img/kontenery-premium.jpg": {
+    "w": 225,
+    "h": 300,
+    "variants": [
+      {
+        "u": "media/img/kontenery-premium-225.webp",
+        "w": 225
+      }
+    ]
+  },
+  "media/img/logowolaparkrect2x.png": {
+    "w": 992,
+    "h": 400,
+    "variants": [
+      {
+        "u": "media/img/logowolaparkrect2x-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/logowolaparkrect2x-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/logowolaparkrect2x-992.webp",
+        "w": 992
+      }
+    ]
+  },
+  "media/img/ma-e_1.jpg": {
+    "w": 4000,
+    "h": 2082,
+    "variants": [
+      {
+        "u": "media/img/ma-e_1-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/ma-e_1-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/ma-e_1-1200.webp",
+        "w": 1200
+      },
+      {
+        "u": "media/img/ma-e_1-1600.webp",
+        "w": 1600
+      },
+      {
+        "u": "media/img/ma-e_1-4000.webp",
+        "w": 4000
+      }
+    ]
+  },
+  "media/img/magazyn.png": {
+    "w": 100,
+    "h": 94,
+    "variants": [
+      {
+        "u": "media/img/magazyn-100.webp",
+        "w": 100
+      }
+    ]
+  },
+  "media/img/maly_sklep.png": {
+    "w": 99,
+    "h": 94,
+    "variants": [
+      {
+        "u": "media/img/maly_sklep-99.webp",
+        "w": 99
+      }
+    ]
+  },
+  "media/img/mapka-ai-kopia.png": {
+    "w": 1048,
+    "h": 874,
+    "variants": [
+      {
+        "u": "media/img/mapka-ai-kopia-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/mapka-ai-kopia-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/mapka-ai-kopia-1048.webp",
+        "w": 1048
+      }
+    ]
+  },
+  "media/img/mobilne_obiekty.jpg": {
+    "w": 1920,
+    "h": 2560,
+    "variants": [
+      {
+        "u": "media/img/mobilne_obiekty-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/mobilne_obiekty-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/mobilne_obiekty-1200.webp",
+        "w": 1200
+      },
+      {
+        "u": "media/img/mobilne_obiekty-1600.webp",
+        "w": 1600
+      },
+      {
+        "u": "media/img/mobilne_obiekty-1920.webp",
+        "w": 1920
+      }
+    ]
+  },
+  "media/img/modulowy-pawilon-pietrowy.jpg": {
+    "w": 512,
+    "h": 640,
+    "variants": [
+      {
+        "u": "media/img/modulowy-pawilon-pietrowy-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/modulowy-pawilon-pietrowy-512.webp",
+        "w": 512
+      }
+    ]
+  },
+  "media/img/obiektpromocyjny.jpg": {
+    "w": 953,
+    "h": 1271,
+    "variants": [
+      {
+        "u": "media/img/obiektpromocyjny-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/obiektpromocyjny-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/obiektpromocyjny-953.webp",
+        "w": 953
+      }
+    ]
+  },
+  "media/img/obiet_biurowy.jpg": {
+    "w": 768,
+    "h": 1024,
+    "variants": [
+      {
+        "u": "media/img/obiet_biurowy-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/obiet_biurowy-768.webp",
+        "w": 768
+      }
+    ]
+  },
+  "media/img/pamir-bike-.png": {
+    "w": 244,
+    "h": 150,
+    "variants": [
+      {
+        "u": "media/img/pamir-bike--244.webp",
+        "w": 244
+      }
+    ]
+  },
+  "media/img/plus.png": {
+    "w": 150,
+    "h": 101,
+    "variants": [
+      {
+        "u": "media/img/plus-150.webp",
+        "w": 150
+      }
+    ]
+  },
+  "media/img/pod_debowcem.png": {
+    "w": 300,
+    "h": 303,
+    "variants": [
+      {
+        "u": "media/img/pod_debowcem-300.webp",
+        "w": 300
+      }
+    ]
+  },
+  "media/img/premium.png": {
+    "w": 150,
+    "h": 100,
+    "variants": [
+      {
+        "u": "media/img/premium-150.webp",
+        "w": 150
+      }
+    ]
+  },
+  "media/img/real.png": {
+    "w": 417,
+    "h": 121,
+    "variants": [
+      {
+        "u": "media/img/real-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/real-417.webp",
+        "w": 417
+      }
+    ]
+  },
+  "media/img/sales.png": {
+    "w": 100,
+    "h": 95,
+    "variants": [
+      {
+        "u": "media/img/sales-100.webp",
+        "w": 100
+      }
+    ]
+  },
+  "media/img/sauna.png": {
+    "w": 100,
+    "h": 96,
+    "variants": [
+      {
+        "u": "media/img/sauna-100.webp",
+        "w": 100
+      }
+    ]
+  },
+  "media/img/serwer.png": {
+    "w": 99,
+    "h": 73,
+    "variants": [
+      {
+        "u": "media/img/serwer-99.webp",
+        "w": 99
+      }
+    ]
+  },
+  "media/img/silownia.png": {
+    "w": 99,
+    "h": 76,
+    "variants": [
+      {
+        "u": "media/img/silownia-99.webp",
+        "w": 99
+      }
+    ]
+  },
+  "media/img/silver_small.png": {
+    "w": 256,
+    "h": 216,
+    "variants": [
+      {
+        "u": "media/img/silver_small-256.webp",
+        "w": 256
+      }
+    ]
+  },
+  "media/img/skiturowebeskidy.png": {
+    "w": 355,
+    "h": 120,
+    "variants": [
+      {
+        "u": "media/img/skiturowebeskidy-355.webp",
+        "w": 355
+      }
+    ]
+  },
+  "media/img/sportowy.png": {
+    "w": 100,
+    "h": 88,
+    "variants": [
+      {
+        "u": "media/img/sportowy-100.webp",
+        "w": 100
+      }
+    ]
+  },
+  "media/img/standard.png": {
+    "w": 150,
+    "h": 101,
+    "variants": [
+      {
+        "u": "media/img/standard-150.webp",
+        "w": 150
+      }
+    ]
+  },
+  "media/img/strozowka.png": {
+    "w": 99,
+    "h": 85,
+    "variants": [
+      {
+        "u": "media/img/strozowka-99.webp",
+        "w": 99
+      }
+    ]
+  },
+  "media/img/t-o-Biuro-roz-adunek.jpg": {
+    "w": 753,
+    "h": 1004,
+    "variants": [
+      {
+        "u": "media/img/t-o-Biuro-roz-adunek-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/t-o-Biuro-roz-adunek-753.webp",
+        "w": 753
+      }
+    ]
+  },
+  "media/img/t-o-biuro-ogrodowe.jpg": {
+    "w": 753,
+    "h": 1004,
+    "variants": [
+      {
+        "u": "media/img/t-o-biuro-ogrodowe-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/t-o-biuro-ogrodowe-753.webp",
+        "w": 753
+      }
+    ]
+  },
+  "media/img/t-o-coffee-bar.jpg": {
+    "w": 806,
+    "h": 1076,
+    "variants": [
+      {
+        "u": "media/img/t-o-coffee-bar-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/t-o-coffee-bar-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/t-o-coffee-bar-806.webp",
+        "w": 806
+      }
+    ]
+  },
+  "media/img/t-o-ekspozycja-aut.jpg": {
+    "w": 753,
+    "h": 1004,
+    "variants": [
+      {
+        "u": "media/img/t-o-ekspozycja-aut-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/t-o-ekspozycja-aut-753.webp",
+        "w": 753
+      }
+    ]
+  },
+  "media/img/t-o-hds-roz-adunek.jpg": {
+    "w": 753,
+    "h": 1004,
+    "variants": [
+      {
+        "u": "media/img/t-o-hds-roz-adunek-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/t-o-hds-roz-adunek-753.webp",
+        "w": 753
+      }
+    ]
+  },
+  "media/img/t-o-mini-salon.jpg": {
+    "w": 753,
+    "h": 1004,
+    "variants": [
+      {
+        "u": "media/img/t-o-mini-salon-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/t-o-mini-salon-753.webp",
+        "w": 753
+      }
+    ]
+  },
+  "media/img/t-o-montaz-obiektu-gastronomicznego.jpg": {
+    "w": 753,
+    "h": 1004,
+    "variants": [
+      {
+        "u": "media/img/t-o-montaz-obiektu-gastronomicznego-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/t-o-montaz-obiektu-gastronomicznego-753.webp",
+        "w": 753
+      }
+    ]
+  },
+  "media/img/t-o-obiekt-z-tarasem.jpg": {
+    "w": 753,
+    "h": 1004,
+    "variants": [
+      {
+        "u": "media/img/t-o-obiekt-z-tarasem-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/t-o-obiekt-z-tarasem-753.webp",
+        "w": 753
+      }
+    ]
+  },
+  "media/img/t-o-obiektgastronomiczny.jpg": {
+    "w": 753,
+    "h": 1004,
+    "variants": [
+      {
+        "u": "media/img/t-o-obiektgastronomiczny-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/t-o-obiektgastronomiczny-753.webp",
+        "w": 753
+      }
+    ]
+  },
+  "media/img/t-o-obiektpromocyjny.jpg": {
+    "w": 753,
+    "h": 1004,
+    "variants": [
+      {
+        "u": "media/img/t-o-obiektpromocyjny-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/t-o-obiektpromocyjny-753.webp",
+        "w": 753
+      }
+    ]
+  },
+  "media/img/t-o-stoisko.jpg": {
+    "w": 753,
+    "h": 1004,
+    "variants": [
+      {
+        "u": "media/img/t-o-stoisko-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/t-o-stoisko-753.webp",
+        "w": 753
+      }
+    ]
+  },
+  "media/img/t-o-strefa-eventowa.jpg": {
+    "w": 753,
+    "h": 1004,
+    "variants": [
+      {
+        "u": "media/img/t-o-strefa-eventowa-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/t-o-strefa-eventowa-753.webp",
+        "w": 753
+      }
+    ]
+  },
+  "media/img/t-o-zabudowa-kontenerowa.jpg": {
+    "w": 806,
+    "h": 1076,
+    "variants": [
+      {
+        "u": "media/img/t-o-zabudowa-kontenerowa-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/t-o-zabudowa-kontenerowa-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/t-o-zabudowa-kontenerowa-806.webp",
+        "w": 806
+      }
+    ]
+  },
+  "media/img/turystyka.jpg": {
+    "w": 1356,
+    "h": 763,
+    "variants": [
+      {
+        "u": "media/img/turystyka-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/turystyka-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/turystyka-1200.webp",
+        "w": 1200
+      },
+      {
+        "u": "media/img/turystyka-1356.webp",
+        "w": 1356
+      }
+    ]
+  },
+  "media/img/unnamed.png": {
+    "w": 512,
+    "h": 512,
+    "variants": [
+      {
+        "u": "media/img/unnamed-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/unnamed-512.webp",
+        "w": 512
+      }
+    ]
+  },
+  "media/img/video-poster.jpg": {
+    "w": 1600,
+    "h": 900,
+    "variants": [
+      {
+        "u": "media/img/video-poster-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/video-poster-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/video-poster-1200.webp",
+        "w": 1200
+      },
+      {
+        "u": "media/img/video-poster-1600.webp",
+        "w": 1600
+      }
+    ]
+  },
+  "media/img/wypozyczalnia_rorowerowa-e1676631046286.jpg": {
+    "w": 911,
+    "h": 1215,
+    "variants": [
+      {
+        "u": "media/img/wypozyczalnia_rorowerowa-e1676631046286-400.webp",
+        "w": 400
+      },
+      {
+        "u": "media/img/wypozyczalnia_rorowerowa-e1676631046286-800.webp",
+        "w": 800
+      },
+      {
+        "u": "media/img/wypozyczalnia_rorowerowa-e1676631046286-911.webp",
+        "w": 911
+      }
+    ]
+  }
+}

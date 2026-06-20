@@ -73,7 +73,14 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-img { display: block; max-width: 100%; }
+/* height:auto neutralizes the intrinsic height="" attribute <Picture> adds for
+   CLS, so author rules (aspect-ratio, or a specific height) drive the box —
+   without it the width/height attrs distort images sized only by width. */
+img { display: block; max-width: 100%; height: auto; }
+/* <Picture> wraps <img> in <picture>; display:contents makes that wrapper
+   transparent to layout, so the inner <img> stays the flex/grid/object-fit
+   child it was before — all existing `.x img` rules keep working unchanged. */
+picture { display: contents; }
 a { color: inherit; text-decoration: none; }
 button { font-family: inherit; cursor: pointer; border: none; background: none; }
 ::selection { background: var(--accent); color: var(--accent-ink); }
@@ -348,7 +355,7 @@ section { position: relative; }
 .offer-card:hover .media img { transform: scale(1.05); }
 .offer-card .body { padding: 22px 24px 26px; display: flex; flex-direction: column; flex: 1; }
 .offer-card h3 { font-size: 1.28rem; font-family: var(--font-display); font-weight: 600; letter-spacing: -0.02em; }
-.offer-card p { color: var(--muted); font-size: 0.95rem; margin-top: 8px; line-height: 1.5; flex: 1; }
+.offer-card p { color: var(--muted); font-size: 1rem; margin-top: 8px; line-height: 1.5; flex: 1; }
 .offer-card .more { margin-top: 16px; }
 
 /* offer detail — scannable facts + gallery (no wall of text) */
@@ -394,7 +401,7 @@ section { position: relative; }
 .step:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
 .step .step-num { counter-increment: step; font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: var(--accent); width: 52px; height: 52px; display: grid; place-items: center; border-radius: 50%; background: var(--accent-soft); }
 .step h3 { font-size: 1.2rem; font-family: var(--font-display); font-weight: 600; }
-.step p { color: var(--muted); margin-top: 6px; font-size: 0.97rem; line-height: 1.55; }
+.step p { color: var(--muted); margin-top: 6px; font-size: 1rem; line-height: 1.55; }
 
 /* ===================== FAQ accordion ===================== */
 .faq-list { border-top: 1px solid var(--line); }
@@ -412,7 +419,7 @@ section { position: relative; }
 /* ===================== Realizacje ===================== */
 .realizacje-grid { columns: 3; column-gap: 18px; }
 .realizacje-grid .real-item { break-inside: avoid; margin-bottom: 18px; border-radius: var(--r-md); overflow: hidden; position: relative; background: var(--bg-soft); color: #fff; display: block; }
-.real-item img { width: 100%; transition: transform 0.7s var(--ease); }
+.real-item img { width: 100%; display: block; aspect-ratio: 4 / 3; object-fit: cover; transition: transform 0.7s var(--ease); }
 .real-item::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 45%, rgba(0,0,0,0.78)); opacity: 0.92; transition: opacity 0.3s; }
 .real-item:hover img { transform: scale(1.06); }
 .real-cap { position: absolute; left: 0; bottom: 0; z-index: 2; padding: 18px 20px; }
@@ -439,14 +446,14 @@ section { position: relative; }
 .contact-card { padding: 22px 24px; border-radius: var(--r-md); border: 1px solid var(--line-2); background: var(--bg-soft-2); }
 .contact-card .role { font-size: 0.76rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
 .contact-card b { display: block; font-family: var(--font-display); font-size: 1.12rem; margin-top: 6px; }
-.contact-card a { display: flex; align-items: center; gap: 8px; color: var(--ink-2); font-size: 0.95rem; margin-top: 9px; }
+.contact-card a { display: flex; align-items: center; gap: 8px; color: var(--ink-2); font-size: 1rem; margin-top: 9px; }
 .contact-card a:hover { color: var(--accent); }
 
 .field { display: flex; flex-direction: column; gap: 7px; margin-bottom: 16px; }
 .field label { font-size: 0.84rem; font-weight: 550; color: var(--ink-2); }
 .input, .textarea, .select-native {
   width: 100%; padding: 13px 15px; border-radius: var(--r-sm); border: 1px solid var(--line);
-  background: var(--bg); font-size: 0.98rem; font-family: inherit; color: var(--ink); transition: border 0.2s, box-shadow 0.2s;
+  background: var(--bg); font-size: 16px; font-family: inherit; color: var(--ink); transition: border 0.2s, box-shadow 0.2s;
 }
 .input:focus, .textarea:focus, .select-native:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
 .input::placeholder, .textarea::placeholder { color: var(--faint); }
@@ -540,7 +547,7 @@ section { position: relative; }
   .page-transition { animation: none; }
   .hero-copy > * { animation: none; }
   .scroll-cue, .btn-accent::after { display: none; }
-  .bld-empty svg, .cfg-swatch-lg.active .sw, .bld-toast, .bld-hint.invalid { animation: none; }
+  .bld-empty svg, .cfg-swatch-lg.active .sw, .bld-toast, .bld-hint.invalid, .cfg-loader .spin, .spin { animation: none; }
   html { scroll-behavior: auto; }
 }
 
@@ -862,10 +869,11 @@ kbd { margin-left: auto; font-family: var(--font-sans); font-size: 0.68rem; padd
   /* smaller client logos so the marquee stays tidy on phones */
   .logos img { height: 62px; max-width: 158px; padding: 12px 18px; }
 }
-@media (max-width: 640px) {
-  /* a landscape hero video is heavily cropped (zoomed) in a portrait frame —
+@media (orientation: portrait) and (max-width: 767px) {
+  /* a landscape hero video is heavily cropped (zoomed) in a PORTRAIT frame —
      `contain` shows the whole scene pulled back; the dark theme hides the
-     letterbox, and the content sits over the lower gradient */
+     letterbox, and the content sits over the lower gradient. Keyed to portrait
+     so phone-landscape (wide, short) keeps the full-bleed cover crop. */
   .hero-media video, .hero-media img {
     object-fit: contain; object-position: center 34%; background: var(--bg-dark);
   }
@@ -876,3 +884,84 @@ kbd { margin-left: auto; font-family: var(--font-sans); font-size: 0.68rem; padd
   .hero-actions .btn { width: 100%; }
   .container { padding-inline: 18px; }
 }
+
+/* ===================== Responsive hardening (audit fixes) ===================== */
+
+/* H1 — a long word / URL / email must never cause horizontal scroll */
+html, body { overflow-x: clip; }
+body { overflow-wrap: break-word; }
+.offer-card h3, .offer-card p, .contact-card a, .faq-q, .footer-col a,
+.breadcrumbs, .cfg-card .lbl b, .cfg-chip b { overflow-wrap: anywhere; }
+
+/* H2 — safe-area insets (viewport-fit=cover removes the browser's auto inset, so
+   fixed / full-bleed UI would sit under the notch / home indicator) */
+.nav-inner { padding-left: max(0px, env(safe-area-inset-left)); padding-right: max(0px, env(safe-area-inset-right)); }
+.drawer { padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
+.footer-bottom { padding-bottom: calc(30px + env(safe-area-inset-bottom)); }
+.cfg-bar { padding-top: max(14px, env(safe-area-inset-top)); }
+.bld-camera { bottom: calc(20px + env(safe-area-inset-bottom)); }
+@media (orientation: landscape) {
+  /* in landscape the notch is on the side — inset the content gutters */
+  .container { padding-inline: max(22px, env(safe-area-inset-left)) max(22px, env(safe-area-inset-right)); }
+}
+@media (max-width: 760px) {
+  .cfg-console.builder, .cfg-console.present { padding-bottom: env(safe-area-inset-bottom); }
+}
+
+/* M2 — touch tablets up to 1024px get the hamburger drawer, not the hover-only
+   desktop nav (whose dropdown is unreachable by tap) */
+@media (max-width: 1024px) {
+  .nav-links, .nav-cta { display: none; }
+  .nav-burger { display: flex; }
+}
+/* M1 — keyboard / focus fallback for the Oferta dropdown (previously hover-only) */
+.nav-has-menu:focus-within .nav-dropdown {
+  opacity: 1; visibility: visible; pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* H6 — 2-column tablet tier for 3-/4-up grids (instead of snapping N -> 1) */
+@media (min-width: 721px) and (max-width: 1024px) {
+  .cols-3, .cols-4 { grid-template-columns: 1fr 1fr; }
+}
+
+/* H7 — clear the doubled bento row once the grid collapses to one column */
+@media (max-width: 720px) { .bento .row-2 { grid-row: auto; } }
+
+/* M4 — phone landscape (short viewport): tighten hero, drop the scroll cue */
+@media (orientation: landscape) and (max-height: 520px) {
+  .hero { min-height: 100svh; }
+  .hero-inner { padding-top: 84px; padding-bottom: 40px; }
+  .scroll-cue { display: none; }
+  .page-hero.with-image { min-height: 60svh; }
+}
+
+/* M5 — comfortable touch targets on coarse pointers */
+@media (pointer: coarse) {
+  .nav-burger { width: 46px; height: 46px; }
+  .modal-close { width: 44px; height: 44px; }
+  .footer-social a { width: 44px; height: 44px; }
+  .btn-sm { min-height: 44px; }
+}
+
+/* M3 — lift / zoom hovers must not stick after a tap on touch devices */
+@media (hover: none) {
+  .card:hover, .offer-card:hover, .tile:hover, .cfg-card:hover, .bld-preset:hover,
+  .logos img:hover, .footer-social a:hover,
+  .tile:hover img, .real-item:hover img, .offer-card:hover .media img { transform: none; }
+}
+
+/* L4 — client logos fit two-per-row even at 320px */
+@media (max-width: 560px) { .logos img { max-width: min(158px, 42vw); } }
+
+/* M7 — modal uses the small/dynamic viewport so the bottom CTA isn't under mobile chrome */
+.modal { max-height: 90dvh; }
+
+/* L1 — large-screen / 4K: grow the content cap instead of a tiny island in a sea of margin */
+@media (min-width: 1600px) { :root { --maxw: 1400px; } }
+@media (min-width: 2200px) { :root { --maxw: 1640px; } }
+
+/* H8 — Google Maps embed: fluid aspect-ratio instead of a fixed 380px height */
+.map-embed { aspect-ratio: 16 / 9; }
+.map-embed iframe { width: 100%; height: 100%; }
+@media (max-width: 600px) { .map-embed { aspect-ratio: 4 / 3; } }

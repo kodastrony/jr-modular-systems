@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Reveal from '../components/Reveal.jsx'
+import Picture from '../components/Picture.jsx'
 import { SectionHead, Stat, OfferCard } from '../components/UI.jsx'
 import { Cube, Arrow, ArrowUpRight, Play } from '../components/Icons.jsx'
 import { company, heroBadges, offer, processSteps, realizacje, clients, faq, media } from '../data/content.js'
@@ -19,7 +20,7 @@ function preferStill() {
    lighter 540p source on small screens and a static poster as the fallback. The
    poster paints instantly under the video, so first paint is never blocked. */
 function HeroMedia() {
-  if (preferStill()) return <img src={media.poster} alt="" fetchpriority="high" />
+  if (preferStill()) return <Picture src={media.poster} alt="" sizes="100vw" loading="eager" fetchpriority="high" />
   const src = (mq('(max-width: 760px)') && media.heroLoopMobile) || media.heroLoop
   return <video src={src} poster={media.poster} autoPlay muted loop playsInline preload="metadata" />
 }
@@ -135,7 +136,7 @@ export default function Home() {
             {realizacje.slice(0, 5).map((r, i) => (
               <Reveal key={r.title} delay={i * 50} className={i === 0 ? 'span-2 row-2' : ''}>
                 <Link to="/realizacje" className={`tile ${i === 0 ? 'tall' : ''}`} style={{ minHeight: i === 0 ? 380 : 290, height: '100%' }}>
-                  <img src={r.img} alt={r.title} loading="lazy" />
+                  <Picture src={r.img} alt={r.title} sizes="(max-width: 720px) 100vw, 50vw" />
                   <div className="tile-body">
                     <h3 style={{ fontSize: i === 0 ? '1.8rem' : '1.3rem' }}>{r.title}</h3>
                     <p>{r.place}</p>
@@ -154,7 +155,7 @@ export default function Home() {
             <span className="eyebrow neutral">Zaufali nam</span>
           </Reveal>
           <Reveal className="logos">
-            {clients.map((c) => <img key={c} src={c} alt="" loading="lazy" />)}
+            {clients.map((c) => <Picture key={c} src={c} alt="" sizes="160px" />)}
           </Reveal>
         </div>
       </section>
@@ -169,7 +170,7 @@ export default function Home() {
                 <video src={media.heroVideo} poster={media.poster} controls autoPlay playsInline style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               ) : (
                 <button onClick={() => setPlaying(true)} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} aria-label="Odtwórz wideo">
-                  <img src={media.poster} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <Picture src={media.poster} alt="" sizes="(max-width: 1100px) 100vw, 1100px" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   <span style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', background: 'rgba(0,0,0,0.25)' }}>
                     <span style={{ width: 84, height: 84, borderRadius: '50%', background: 'rgba(255,255,255,0.16)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.4)', display: 'grid', placeItems: 'center', color: '#fff' }}>
                       <Play style={{ width: 40, height: 40 }} />

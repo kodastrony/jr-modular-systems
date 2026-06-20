@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import Reveal from '../components/Reveal.jsx'
+import Picture from '../components/Picture.jsx'
 import { Stat, SectionHead } from '../components/UI.jsx'
 import { Check, Cube, Arrow } from '../components/Icons.jsx'
 import { about, company } from '../data/content.js'
@@ -21,7 +22,7 @@ export default function About() {
       <section className="section" style={{ paddingTop: 20 }}>
         <div className="container">
           <div className="feature-row">
-            <div className="feature-media"><img src={about.image} alt="JR Modular Systems" loading="lazy" /></div>
+            <div className="feature-media"><Picture src={about.image} alt="JR Modular Systems" sizes="(max-width: 980px) 100vw, 50vw" /></div>
             <div className="feature-text prose">
               {about.paragraphs.map((p, i) => <p key={i}>{p}</p>)}
               <p style={{ color: 'var(--accent)', fontWeight: 600 }}>{company.hashtag}</p>

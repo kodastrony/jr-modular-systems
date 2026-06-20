@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import Picture from './Picture.jsx'
 import { company, offer } from '../data/content.js'
 import { Cube, Mail, Phone, Pin, IgIcon, InIcon, YtIcon, Arrow } from './Icons.jsx'
 
@@ -24,7 +25,7 @@ export default function Footer() {
 
         <div className="footer-top">
           <div className="footer-brand">
-            <img src={company.logo} alt="JR Modular Systems" />
+            <Picture src={company.logo} alt="JR Modular Systems" sizes="220px" />
             <p>{company.intro}</p>
             <div className="footer-social">
               <a href={company.social.instagram} target="_blank" rel="noreferrer" aria-label="Instagram"><IgIcon style={{ width: 18, height: 18 }} /></a>

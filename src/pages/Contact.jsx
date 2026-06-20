@@ -132,11 +132,11 @@ export default function Contact() {
 
       <section className="section-sm" style={{ paddingTop: 0 }}>
         <div className="container">
-          <Reveal style={{ borderRadius: 'var(--r-lg)', overflow: 'hidden', border: '1px solid var(--line-2)' }}>
+          <Reveal className="map-embed" style={{ borderRadius: 'var(--r-lg)', overflow: 'hidden', border: '1px solid var(--line-2)' }}>
             <iframe
               title="Mapa — JR Modular Systems"
               src="https://www.google.com/maps?q=JR%20Modular%20Systems&output=embed"
-              style={{ width: '100%', height: 380, border: 0, display: 'block' }}
+              style={{ width: '100%', height: '100%', border: 0, display: 'block' }}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             />

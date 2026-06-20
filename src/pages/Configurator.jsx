@@ -1,6 +1,7 @@
 import { Component, useEffect, useMemo, useReducer, useRef, useState, useCallback } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import ConfiguratorCanvas from '../three/builder/ConfiguratorCanvas.jsx'
+import Picture from '../components/Picture.jsx'
 import { company } from '../data/content.js'
 import {
   Arrow, Download, Close, Mail, Trash, Plus, Check,
@@ -412,7 +413,7 @@ function BuildUI({
       {/* top bar */}
       <header className="cfg-bar">
         <Link to="/" className="cfg-pill ghost" aria-label="Strona główna"><Arrow style={{ width: 15, height: 15, transform: 'scaleX(-1)' }} /> <span className="cfg-pill-lbl">Strona główna</span></Link>
-        <div className="cfg-brand"><img src={company.logoMark} alt="" /> Kreator <span className="muted">3D</span></div>
+        <div className="cfg-brand"><Picture src={company.logoMark} alt="" sizes="44px" loading="eager" /> Kreator <span className="muted">3D</span></div>
         <div className="cfg-bar-spacer" />
         <span className="cfg-meta">{modules.length} mod. · ~{area} m² · {floors} kond.{addonCount ? ` · ${addonCount} dod.` : ''}</span>
         <div className="cfg-iconbtns">
@@ -518,7 +519,7 @@ function PresentUI({ area, floors, price, finish, patchFinish, editAgain, openEx
     <div className="cfg-ui">
       <header className="cfg-bar">
         <button className="cfg-pill ghost" onClick={editAgain} aria-label="Edytuj projekt"><Arrow style={{ width: 15, height: 15, transform: 'scaleX(-1)' }} /> <span className="cfg-pill-lbl">Edytuj projekt</span></button>
-        <div className="cfg-brand"><img src={company.logoMark} alt="" /> Wizualizacja <span className="muted">3D</span></div>
+        <div className="cfg-brand"><Picture src={company.logoMark} alt="" sizes="44px" loading="eager" /> Wizualizacja <span className="muted">3D</span></div>
         <div className="cfg-bar-spacer" />
         <span className="cfg-meta">~{area} m² · {floors} kond.</span>
         <button className="cfg-pill ghost" onClick={openExport} aria-label="Zapisz projekt"><Download style={{ width: 16, height: 16 }} /> <span className="cfg-pill-lbl">Zapisz</span></button>
@@ -678,7 +679,7 @@ function ExportModal({ data, project, stats, onClose, onContact }) {
       <div className="modal" role="dialog" aria-modal="true" aria-labelledby="export-title" onClick={(e) => e.stopPropagation()}>
         <div className="modal-head">
           <h3 id="export-title">Twój projekt</h3>
-          <button className="modal-close" onClick={onClose}><Close style={{ width: 18, height: 18 }} /></button>
+          <button className="modal-close" onClick={onClose} aria-label="Zamknij"><Close style={{ width: 18, height: 18 }} /></button>
         </div>
         <div className="modal-body">
           {data.url && <div className="modal-summary-preview"><img src={data.url} alt="Podgląd projektu" /></div>}

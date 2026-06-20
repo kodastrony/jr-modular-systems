@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import Reveal from '../components/Reveal.jsx'
+import Picture from '../components/Picture.jsx'
 import { SectionHead } from '../components/UI.jsx'
 import { Check, Cube, Arrow, Bolt, Layers, Truck, Leaf } from '../components/Icons.jsx'
 import { technology } from '../data/content.js'
@@ -10,7 +11,7 @@ export default function Technology() {
   return (
     <>
       <section className="page-hero with-image" style={{ minHeight: '56vh' }}>
-        <div className="page-hero-media"><img src={technology.hero.image} alt="Technologia modułowa" /></div>
+        <div className="page-hero-media"><Picture src={technology.hero.image} alt="Technologia modułowa" sizes="100vw" loading="eager" fetchpriority="high" /></div>
         <div className="container">
           <div className="breadcrumbs"><Link to="/">Start</Link><span className="sep">/</span><span>Technologia</span></div>
           <Reveal>
@@ -51,7 +52,7 @@ export default function Technology() {
         <div className="container">
           {technology.blocks.map((b, i) => (
             <Reveal key={i} className="feature-row" style={{ marginBottom: 'clamp(40px,6vw,84px)', flexDirection: i % 2 ? 'row-reverse' : 'row' }}>
-              <div className="feature-media" style={{ order: i % 2 ? 2 : 0 }}><img src={b.image} alt={b.heading} loading="lazy" /></div>
+              <div className="feature-media" style={{ order: i % 2 ? 2 : 0 }}><Picture src={b.image} alt={b.heading} sizes="(max-width: 980px) 100vw, 50vw" /></div>
               <div className="feature-text">
                 <h2 className="h3" style={{ marginBottom: 14 }}>{b.heading}</h2>
                 <p className="body-lg">{b.text}</p>

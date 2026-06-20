@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { nav, company, offer } from '../data/content.js'
+import Picture from './Picture.jsx'
 import { Cube, Arrow } from './Icons.jsx'
 
 export default function Header({ dark = false }) {
@@ -33,7 +34,7 @@ export default function Header({ dark = false }) {
       <header className={cls}>
         <div className="nav-inner">
           <Link to="/" className="nav-logo" aria-label="JR Modular Systems — strona główna">
-            <img src={company.logoMark} alt="" />
+            <Picture src={company.logoMark} alt="" sizes="44px" loading="eager" />
             <span>JR Modular<span style={{ opacity: 0.5 }}>&nbsp;Systems</span></span>
           </Link>
 
@@ -47,7 +48,7 @@ export default function Header({ dark = false }) {
                   <div className="nav-dropdown">
                     {item.children.map((c) => (
                       <Link key={c.to} to={c.to} className="nav-dd-item">
-                        <img src={c.icon} alt="" />
+                        <Picture src={c.icon} alt="" sizes="52px" />
                         <div>
                           <b>{c.label}</b>
                           <span>{c.short.slice(0, 42)}…</span>

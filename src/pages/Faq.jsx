@@ -24,11 +24,11 @@ export default function Faq() {
           <div className="faq-list">
             {faq.map((f, i) => (
               <div key={f.q} className={`faq-item ${open === i ? 'open' : ''}`}>
-                <button className="faq-q" onClick={() => setOpen(open === i ? -1 : i)} aria-expanded={open === i}>
+                <button className="faq-q" id={`faq-q-${i}`} onClick={() => setOpen(open === i ? -1 : i)} aria-expanded={open === i} aria-controls={`faq-a-${i}`}>
                   {f.q}
                   <span className="faq-icon" />
                 </button>
-                <div className="faq-a" style={{ maxHeight: open === i ? 400 : 0, transition: 'max-height 0.4s var(--ease)' }}>
+                <div className="faq-a" id={`faq-a-${i}`} role="region" aria-labelledby={`faq-q-${i}`} style={{ maxHeight: open === i ? 800 : 0, transition: 'max-height 0.4s var(--ease)' }}>
                   <div className="faq-a-inner">{f.a}</div>
                 </div>
               </div>

@@ -1,6 +1,7 @@
 import { Routes, Route, useLocation, Link } from 'react-router-dom'
 import { useEffect, useState, lazy, Suspense } from 'react'
 import Layout from './components/Layout.jsx'
+import Picture from './components/Picture.jsx'
 import { company } from './data/content.js'
 import { Cube, Arrow } from './components/Icons.jsx'
 import Home from './pages/Home.jsx'
@@ -45,7 +46,7 @@ function ConfiguratorRoute() {
 function ConfiguratorDesktopOnly() {
   return (
     <div className="cfg-desktop-only">
-      <Link to="/" className="cdo-brand"><img src={company.logoMark} alt="" /> JR Modular<span> Systems</span></Link>
+      <Link to="/" className="cdo-brand"><Picture src={company.logoMark} alt="" sizes="44px" loading="eager" /> JR Modular<span> Systems</span></Link>
       <div className="cdo-card">
         <div className="cdo-icon" aria-hidden>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">

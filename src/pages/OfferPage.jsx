@@ -1,5 +1,6 @@
 import { useParams, Link, Navigate } from 'react-router-dom'
 import Reveal from '../components/Reveal.jsx'
+import Picture from '../components/Picture.jsx'
 import { Cube, Arrow, Check, ArrowUpRight } from '../components/Icons.jsx'
 import { offerBySlug, offer } from '../data/content.js'
 
@@ -9,7 +10,7 @@ export function OfferView({ item }) {
     <>
       {/* hero with image */}
       <section className="page-hero with-image">
-        <div className="page-hero-media"><img src={item.hero} alt={item.title} /></div>
+        <div className="page-hero-media"><Picture src={item.hero} alt={item.title} sizes="100vw" loading="eager" fetchpriority="high" /></div>
         <div className="container">
           <div className="breadcrumbs">
             <Link to="/">Start</Link><span className="sep">/</span>
@@ -49,7 +50,7 @@ export function OfferView({ item }) {
             {item.gallery.map((g, i) => (
               <Reveal key={i} delay={i * 40}>
                 <div className="card" style={{ aspectRatio: '4 / 3', overflow: 'hidden' }}>
-                  <img src={g} alt={`${item.title} — realizacja ${i + 1}`} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <Picture src={g} alt={`${item.title} — realizacja ${i + 1}`} sizes="(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 33vw" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
               </Reveal>
             ))}
@@ -68,7 +69,7 @@ export function OfferView({ item }) {
             {others.map((o) => (
               <Reveal key={o.slug}>
                 <Link to={`/oferta/${o.slug}`} className="card offer-card">
-                  <div className="media"><img src={o.hero} alt={o.title} loading="lazy" /></div>
+                  <div className="media"><Picture src={o.hero} alt={o.title} sizes="(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 33vw" /></div>
                   <div className="body"><h3>{o.title}</h3><p>{o.short}</p></div>
                 </Link>
               </Reveal>

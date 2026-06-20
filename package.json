@@ -6,6 +6,9 @@
   "description": "JR Modular Systems — modular container buildings showcase with interactive 3D configurator",
   "scripts": {
     "dev": "vite",
+    "gen:images": "node scripts/gen-images.mjs",
+    "prebuild": "node scripts/gen-images.mjs",
+    "prebuild:web": "node scripts/gen-images.mjs",
     "build": "vite build",
     "build:web": "vite build --mode web",
     "preview": "vite preview",
@@ -22,6 +25,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.2",
+    "sharp": "^0.35.2",
     "vite": "^5.4.10",
     "vite-plugin-singlefile": "^2.3.3"
   }
