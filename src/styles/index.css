@@ -73,10 +73,12 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* height:auto neutralizes the intrinsic height="" attribute <Picture> adds for
-   CLS, so author rules (aspect-ratio, or a specific height) drive the box —
-   without it the width/height attrs distort images sized only by width. */
-img { display: block; max-width: 100%; height: auto; }
+/* width:auto + height:auto neutralize the intrinsic width=""/height="" attributes
+   <Picture> adds for CLS, so author rules drive the box: `width:100%` content
+   images and aspect-ratio still win by specificity, while fixed-height logos
+   (.cfg-brand/.footer-brand/.logos…) get width back from height × aspect-ratio
+   instead of being stretched to the attribute's pixel width. */
+img { display: block; max-width: 100%; width: auto; height: auto; }
 /* <Picture> wraps <img> in <picture>; display:contents makes that wrapper
    transparent to layout, so the inner <img> stays the flex/grid/object-fit
    child it was before — all existing `.x img` rules keep working unchanged. */
