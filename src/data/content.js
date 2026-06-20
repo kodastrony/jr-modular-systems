@@ -347,7 +347,7 @@ export const about = {
 
 /* ---- Technology ---- */
 export const technology = {
-  hero: { headline: 'Technologia modułowa', sub: 'Nowa rzeczywistość budowlana na świecie. Nowoczesne budynki w oparciu o innowacyjne, autorskie metody produkcyjne.', image: IMG('mobilne_obiekty.jpg') },
+  hero: { headline: 'Technologia modułowa', sub: 'Nowa rzeczywistość budowlana na świecie. Nowoczesne budynki w oparciu o innowacyjne, autorskie metody produkcyjne.', image: IMG('event.jpg') },
   intro: [
     'Jesteśmy specjalistami od technologii modułowej. Wykonujemy nowoczesne budynki w oparciu o innowacyjne, autorskie metody produkcyjne. Nasz zespół tworzą fachowcy z różnych dziedzin – m.in. projektanci, architekci, inżynierowie, montażyści i spawacze. Dysponujemy własną rozbudowaną halą produkcyjną wyposażoną w zaawansowane technologicznie urządzenia.',
     'Dostarczane przez nas modułowe pawilony handlowe i usługowe, biurowce, placówki oświatowe i medyczne oraz inne budynki to obiekty o bardzo dobrych parametrach użytkowych. Dzięki stosowaniu technologii prefabrykowanej ich wykonanie trwa niezwykle krótko.',
