@@ -55,22 +55,28 @@ function fileProtocolFriendly() {
 //   • `vite build --mode web` → code-split. Content pages skip the heavy Three.js
 //     bundle (the 3D configurator is a lazy chunk) — fast on weak devices, for
 //     hosting on Cloudflare / GitHub Pages (where a server loads the chunks).
-export default defineConfig(({ mode }) => {
-  // Three build shapes:
-  //   • default `vite build` (production) → code-split, base '/', BrowserRouter
-  //     (clean URLs). The hosted SEO build served at the root domain (Cloudflare
-  //     jr-modular-systems.kodastrony.pl). This is the indexable, canonical site.
-  //   • `--mode web` → code-split, relative base, HashRouter. The GitHub-Pages
-  //     sub-path mirror; de-duplicated to the root domain via cross-domain canonical.
-  //   • `--mode file` → single inlined index.html, HashRouter. Opens from file://.
-  const singlefile = mode === 'file'
-  const hostedRoot = mode !== 'web' && mode !== 'file' // production build + dev server
+export default defineConfig(({ mode, command }) => {
+  // Build shapes:
+  //   • default `vite build` (production) → single inlined index.html, HashRouter,
+  //     relative base. This is what Cloudflare's git build serves at
+  //     jr-modular-systems.kodastrony.pl today (and opens from file://). It still
+  //     carries all the SEO: site-wide JSON-LD in index.html + the runtime <Seo>
+  //     head manager. Under HashRouter every clean URL renders Home and canonicals
+  //     to "/", so Google consolidates to one richly-marked-up page (no dup harm).
+  //   • `--mode hosted` → code-split, base '/', BrowserRouter (clean per-page URLs
+  //     + SPA fallback). The full per-page-indexable SEO build — deploy to
+  //     Cloudflare via `wrangler pages deploy` or by pointing CF's build command at
+  //     `npm run build:hosted` once the git build is unblocked.
+  //   • `--mode web` → code-split, relative base, HashRouter. GitHub-Pages mirror,
+  //     de-duplicated to the root domain via cross-domain canonical.
+  const dev = command === 'serve'
+  const hosted = mode === 'hosted'
+  const singlefile = command === 'build' && !hosted && mode !== 'web'
+  const useHash = !(hosted || dev) // BrowserRouter (clean URLs) for hosted build + dev; HashRouter otherwise
   return {
-    base: hostedRoot ? '/' : './',
+    base: hosted || dev ? '/' : './',
     define: {
-      // Clean-URL BrowserRouter only for the hosted root build + dev; HashRouter
-      // for the sub-path mirror and the serverless file:// build.
-      __USE_HASH_ROUTER__: JSON.stringify(!hostedRoot),
+      __USE_HASH_ROUTER__: JSON.stringify(useHash),
     },
     plugins: [
       react(),
