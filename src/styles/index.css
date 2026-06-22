@@ -6,56 +6,58 @@
    ============================================================ */
 
 :root {
-  /* surfaces — gray-black (matches the black & yellow JR logo) */
-  --bg: #131418;
-  --bg-soft: #1c1d22;
-  --bg-soft-2: #191a1e;
-  --bg-tint: #1d1e23;
-  --bg-dark: #0c0c0e;
-  --bg-dark-2: #141519;
-  --bg-dark-3: #1f2025;
+  /* LIGHT editorial surfaces — clean paper white + structural concrete tints */
+  --bg: #ffffff;
+  --bg-soft: #f3f3ef;       /* concrete-light section band */
+  --bg-soft-2: #ecece7;     /* slightly deeper card / input */
+  --bg-tint: #faf9f4;       /* faint warm paper */
+  /* dark anchors — deep architectural ink (NEVER pure black), for contrast islands */
+  --bg-dark: #14171c;
+  --bg-dark-2: #1a1e25;
+  --bg-dark-3: #232a33;
 
-  /* ink — white on dark */
-  --ink: #f4f4f5;
-  --ink-2: #d2d3d6;
-  --muted: #a1a2a8;
-  --faint: #83848a;
-  --on-dark: #f4f4f5;
-  --on-dark-soft: #b8b8be;
-  --on-dark-faint: #8a8a92;
+  /* ink — deep charcoal on light (never pure black) */
+  --ink: #1b1f25;
+  --ink-2: #3b424b;
+  --muted: #686f78;
+  --faint: #9aa1a9;
+  --on-dark: #f5f5f2;
+  --on-dark-soft: #c6cacf;
+  --on-dark-faint: #969aa0;
 
-  /* hairlines — light on dark */
-  --line: rgba(255, 255, 255, 0.13);
-  --line-2: rgba(255, 255, 255, 0.07);
-  --line-dark: rgba(255, 255, 255, 0.12);
-  --line-dark-2: rgba(255, 255, 255, 0.07);
+  /* hairlines — dark on light, light on dark */
+  --line: rgba(20, 24, 30, 0.14);
+  --line-2: rgba(20, 24, 30, 0.08);
+  --line-dark: rgba(255, 255, 255, 0.14);
+  --line-dark-2: rgba(255, 255, 255, 0.08);
 
-  /* accent — JR signal yellow */
+  /* accent — JR signal yellow (fills) + deep amber (accent text on light) */
   --accent: #ffc400;
   --accent-2: #ffd23d;
   --accent-press: #e0ac00;
-  --accent-ink: #15150e;
-  --accent-soft: rgba(255, 196, 0, 0.13);
-  --accent-glow: rgba(255, 196, 0, 0.30);
+  --accent-ink: #1a1505;
+  --accent-text: #8a6500;
+  --accent-soft: rgba(255, 196, 0, 0.16);
+  --accent-glow: rgba(255, 196, 0, 0.34);
 
-  /* radii */
-  --r-xs: 8px;
-  --r-sm: 12px;
-  --r-md: 18px;
-  --r-lg: 26px;
-  --r-xl: 38px;
+  /* radii — a touch sharper for the architectural feel */
+  --r-xs: 6px;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 30px;
   --r-pill: 999px;
 
-  /* shadow */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05), 0 4px 14px -8px rgba(0, 0, 0, 0.12);
-  --shadow-md: 0 8px 30px -12px rgba(0, 0, 0, 0.18);
-  --shadow-lg: 0 30px 70px -30px rgba(0, 0, 0, 0.34);
-  --shadow-accent: 0 12px 30px -10px var(--accent-glow);
+  /* shadow — soft, light-theme (cool ink-tinted) */
+  --shadow-sm: 0 1px 2px rgba(20, 24, 30, 0.05), 0 6px 18px -10px rgba(20, 24, 30, 0.12);
+  --shadow-md: 0 12px 34px -14px rgba(20, 24, 30, 0.15);
+  --shadow-lg: 0 36px 80px -34px rgba(20, 24, 30, 0.24);
+  --shadow-accent: 0 14px 34px -12px var(--accent-glow);
 
   --font-sans: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-display: 'Archivo', system-ui, -apple-system, sans-serif;
+  --font-display: 'Bricolage Grotesque', 'Archivo', system-ui, sans-serif;
 
-  --nav-h: 56px;
+  --nav-h: 60px;
   --maxw: 1220px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -289,7 +291,7 @@ section { position: relative; }
 .hero-media video, .hero-media img { width: 100%; height: 100%; object-fit: cover; }
 .hero-media::after {
   content: ''; position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(8, 8, 10, 0.55) 0%, rgba(8, 8, 10, 0.15) 32%, rgba(8, 8, 10, 0.25) 60%, rgba(8, 8, 10, 0.9) 100%);
+  background: linear-gradient(180deg, rgba(8, 8, 10, 0.5) 0%, rgba(8, 8, 10, 0.12) 30%, rgba(8, 8, 10, 0.32) 58%, rgba(11, 11, 14, 0.92) 88%, #0b0b0e 100%);
 }
 .hero-inner { position: relative; z-index: 2; width: 100%; padding-bottom: clamp(56px, 9vh, 110px); padding-top: 120px; }
 .hero h1 { color: #fff; max-width: 16ch; }
@@ -593,6 +595,105 @@ section { position: relative; }
 .chips { display: flex; flex-wrap: wrap; gap: 10px; }
 .chip { padding: 8px 15px; border-radius: var(--r-pill); background: var(--bg-soft); border: 1px solid var(--line-2); font-size: 0.88rem; color: var(--ink-2); font-weight: 500; }
 .dark .chip { background: var(--bg-dark-3); border-color: var(--line-dark-2); color: var(--on-dark-soft); }
+
+/* ============================================================
+   LIGHT THEME — editorial-architectural pass
+   Overrides for components that assumed the old dark canvas. Placed after the
+   base rules so same-specificity selectors win. Dark "islands" (hero, footer,
+   .section.dark, .cta-band, .tile, configurator) intentionally stay dark.
+   ============================================================ */
+
+/* Bricolage Grotesque display — soft, characterful, less sharp than a serif */
+.display { font-weight: 600; letter-spacing: -0.022em; line-height: 1.03; font-optical-sizing: auto; }
+.h1 { letter-spacing: -0.028em; }
+.h2 { font-weight: 600; letter-spacing: -0.022em; line-height: 1.06; }
+.h3 { font-weight: 600; letter-spacing: -0.015em; }
+.stat .num { font-weight: 700; letter-spacing: -0.03em; }
+/* keep tiny UI labels in the clean grotesque */
+.stat .label, .nav-link, .eyebrow, .drawer-group-label { font-family: var(--font-sans); }
+
+/* eyebrow: yellow text is unreadable on white → deep amber; dark islands keep yellow */
+.eyebrow { color: var(--accent-text); }
+.dark .eyebrow, .footer .eyebrow { color: var(--accent-2); }
+
+/* home configurator-CTA → light, with a soft gradient seam from the dark video hero */
+.cfg-showcase { color: var(--ink); background: #fff; padding-top: clamp(170px, 16vw, 240px); }
+.cfg-showcase::before {
+  content: ''; position: absolute; inset: 0 0 auto 0; height: clamp(120px, 17vh, 200px);
+  background: linear-gradient(180deg, #0b0b0e 0%, rgba(11, 11, 14, 0) 100%);
+  z-index: 1; pointer-events: none;
+}
+.cfg-showcase .container { position: relative; z-index: 2; }
+.cfg-showcase-glow { background: radial-gradient(circle, var(--accent-soft), rgba(255, 196, 0, 0) 64%); opacity: 0.6; z-index: 0; }
+.cfg-showcase .eyebrow { color: var(--accent-text); }
+
+/* nav: dark text on light by default; translucent WHITE bar once scrolled */
+.nav { color: var(--ink); }
+.nav.scrolled, .nav.on-dark.scrolled {
+  background: rgba(255, 255, 255, 0.82);
+  -webkit-backdrop-filter: saturate(160%) blur(18px);
+  backdrop-filter: saturate(160%) blur(18px);
+  box-shadow: 0 1px 0 var(--line-2), 0 10px 30px -24px rgba(20, 24, 30, 0.55);
+  color: var(--ink);
+}
+.nav-link:hover { background: rgba(20, 24, 30, 0.05); }
+.nav-dropdown { background: rgba(255, 255, 255, 0.97); border-color: var(--line); color: var(--ink); }
+
+/* mobile drawer: light */
+.drawer { background: rgba(255, 255, 255, 0.98); color: var(--ink); }
+
+/* secondary button → solid ink (was a light button for dark bg); ghost hover */
+.btn-dark { background: var(--bg-dark); color: var(--on-dark); }
+.btn-dark:hover { background: var(--bg-dark-3); transform: translateY(-2px); }
+.btn-ghost:hover { background: rgba(20, 24, 30, 0.05); border-color: rgba(20, 24, 30, 0.3); }
+
+/* cards pop white on the soft bands; client logos get a frame */
+.card { background: var(--bg); }
+.logos img { background: var(--bg-soft); border: 1px solid var(--line-2); }
+.feature-media { box-shadow: var(--shadow-md); border: 1px solid var(--line-2); }
+
+/* ============================================================
+   Satisfying motion — comfortable, editorial polish
+   ============================================================ */
+
+/* smoother route transition (gentle rise) */
+.page-transition { animation: pageRise 0.6s var(--ease) both; }
+@keyframes pageRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* reveals settle a touch more smoothly */
+.reveal { transition: opacity 0.85s var(--ease), transform 0.9s var(--ease); }
+
+/* editorial image reveal: feature media settles out of a soft zoom as it enters */
+.feature-media { overflow: hidden; }
+.reveal .feature-media img { transform: scale(1.08); transition: transform 1.25s var(--ease); }
+.reveal.in .feature-media img { transform: scale(1); }
+
+/* comfortable hover lifts on the light surfaces (soft, never bouncy) */
+.offer-card { transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease), border-color 0.3s; }
+.offer-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: var(--line); }
+.offer-card .more svg { transition: transform 0.28s var(--ease); }
+.offer-card:hover .more svg { transform: translate(4px, -4px); }
+.offer-fact, .contact-card { transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease); }
+.offer-fact:hover, .contact-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-sm); }
+.step:hover { box-shadow: var(--shadow-md); }
+
+/* text links: a fine underline that draws in on hover */
+.textlink { position: relative; }
+.textlink::after {
+  content: ''; position: absolute; left: 0; right: 18px; bottom: -3px; height: 1.5px;
+  background: currentColor; opacity: 0.45; transform: scaleX(0); transform-origin: 0 50%;
+  transition: transform 0.3s var(--ease);
+}
+.textlink:hover::after { transform: scaleX(1); }
+
+/* FAQ accordion icon spins to a + on the light theme */
+.faq-q:hover { color: var(--accent-text); }
+
+@media (prefers-reduced-motion: reduce) {
+  .page-transition { animation: none; }
+  .reveal .feature-media img { transform: none; }
+  .textlink::after { display: none; }
+}
 
 /* ============================================================
    CONFIGURATOR

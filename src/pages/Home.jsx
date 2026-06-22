@@ -62,13 +62,13 @@ export default function Home() {
         <div className="container container-narrow" style={{ textAlign: 'center' }}>
           <Reveal>
             <span className="eyebrow">Konfigurator 3D</span>
-            <h2 className="h2 balance" style={{ marginTop: 16, color: '#fff' }}>Zaprojektuj swój obiekt, moduł po module.</h2>
-            <p className="lead" style={{ marginTop: 20, color: 'var(--on-dark-soft)', marginInline: 'auto', maxWidth: '56ch' }}>
+            <h2 className="h2 balance" style={{ marginTop: 16 }}>Zaprojektuj swój obiekt, moduł po module.</h2>
+            <p className="lead" style={{ marginTop: 20, marginInline: 'auto', maxWidth: '56ch' }}>
               Złóż budynek z gotowych modułów kontenerowych — dobierz układ, elewację i dach, obejrzyj bryłę w 3D, a gotowy projekt wyślij do nas po bezpłatną wycenę.
             </p>
             <div className="cfg-cta-points">
               {['Kilkanaście wariantów modułów', 'Podgląd 3D na żywo', 'Wycena bez zobowiązań'].map((t) => (
-                <span className="hero-badge" key={t} style={{ color: 'var(--on-dark-soft)' }}><span className="dot" aria-hidden="true" /> {t}</span>
+                <span className="hero-badge" key={t} style={{ color: 'var(--ink-2)' }}><span className="dot" aria-hidden="true" /> {t}</span>
               ))}
             </div>
             <div style={{ marginTop: 36 }}>
@@ -114,11 +114,11 @@ export default function Home() {
                 <div><h3>{s.title}</h3><p>{s.text}</p></div>
               </Reveal>
             ))}
-            <Reveal delay={300} className="step" style={{ background: 'var(--bg-dark)', color: '#fff', gridTemplateColumns: '1fr', alignItems: 'center' }}>
+            <Reveal delay={300} className="step" style={{ background: 'var(--accent)', borderColor: 'transparent', gridTemplateColumns: '1fr', alignItems: 'center' }}>
               <div>
-                <h3 style={{ color: '#fff' }}>Gotowy, by zacząć?</h3>
-                <p style={{ color: 'rgba(255,255,255,0.7)' }}>Otwórz konfigurator i zobacz swój obiekt w 3D.</p>
-                <Link to="/konfigurator" className="btn btn-accent btn-sm" style={{ marginTop: 14 }}><Cube style={{ width: 15, height: 15 }} /> Konfigurator</Link>
+                <h3 style={{ color: 'var(--accent-ink)' }}>Gotowy, by zacząć?</h3>
+                <p style={{ color: 'rgba(26,21,5,0.74)' }}>Otwórz konfigurator i zobacz swój obiekt w 3D.</p>
+                <Link to="/konfigurator" className="btn btn-dark btn-sm" style={{ marginTop: 14 }}><Cube style={{ width: 15, height: 15 }} /> Konfigurator</Link>
               </div>
             </Reveal>
           </div>
@@ -161,9 +161,9 @@ export default function Home() {
       </section>
 
       {/* ---------- VIDEO ---------- */}
-      <section className="section dark">
+      <section className="section">
         <div className="container">
-          <SectionHead center eyebrow="JR w obiektywie" title="Zobacz nas w akcji" light />
+          <SectionHead center eyebrow="JR w obiektywie" title="Zobacz nas w akcji" />
           <Reveal>
             <div style={{ position: 'relative', borderRadius: 'var(--r-lg)', overflow: 'hidden', boxShadow: 'var(--shadow-lg)', aspectRatio: '16/9', background: '#000' }}>
               {playing ? (

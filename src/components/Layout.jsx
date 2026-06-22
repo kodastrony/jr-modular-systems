@@ -22,12 +22,14 @@ function ScrollProgress() {
 
 export default function Layout() {
   const { pathname } = useLocation()
-  const dark = true // whole site uses a dark gray-black surface now
+  // light site, but a few pages open on a dark hero (video / full-bleed image) —
+  // there the nav needs light text until you scroll onto the light content.
+  const darkHero = pathname === '/' || pathname === '/technologia' || /^\/oferta\/[^/]+$/.test(pathname)
   return (
     <>
       <a href="#main" className="skip-link">Przejdź do treści</a>
       <ScrollProgress />
-      <Header dark={dark} />
+      <Header dark={darkHero} />
       <main id="main" tabIndex={-1}>
         <div key={pathname} className="page-transition">
           <Outlet />
