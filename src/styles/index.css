@@ -737,6 +737,15 @@ section { position: relative; }
 .cfg-pill.ghost { background: transparent; }
 .cfg-pill.ghost:hover { background: rgba(255,255,255,0.08); }
 
+/* PRESENT mode sits on a WHITE studio backdrop, so the shared (light-on-dark) bar
+   would vanish into white. Flip it to dark text + light glass pills + a soft top
+   scrim so "Edytuj projekt / Wizualizacja / meta / Zapisz" stay clearly readable. */
+.cfg-bar.present { color: #232830; background: linear-gradient(to bottom, rgba(247,249,251,0.92), rgba(247,249,251,0.5) 62%, rgba(247,249,251,0)); }
+.cfg-bar.present .cfg-brand .muted,
+.cfg-bar.present .cfg-meta { color: #5d636c; }
+.cfg-bar.present .cfg-pill.ghost { background: rgba(255,255,255,0.82); border-color: rgba(20,26,34,0.16); color: #232830; box-shadow: 0 1px 5px rgba(20,26,34,0.08); }
+.cfg-bar.present .cfg-pill.ghost:hover { background: #fff; border-color: rgba(20,26,34,0.28); color: #14181d; }
+
 /* ---- selected-module editor (floats under the top bar) ---- */
 .cfg-editor { position: fixed; top: 76px; left: 50%; transform: translateX(-50%); z-index: 19; display: flex; align-items: center; gap: 10px; padding: 8px 10px 8px 16px; border-radius: var(--r-pill); background: rgba(18,19,24,0.84); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); border: 1px solid rgba(255,255,255,0.1); box-shadow: var(--shadow-lg); color: var(--on-dark); max-width: calc(100% - 32px); }
 .cfg-editor .lab { font-size: 0.8rem; color: var(--on-dark-soft); white-space: nowrap; }

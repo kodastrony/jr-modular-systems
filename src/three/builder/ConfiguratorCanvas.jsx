@@ -49,8 +49,8 @@ export default function ConfiguratorCanvas(props) {
       shadows
       frameloop="demand"
       dpr={[1, maxDpr]}
-      camera={{ position: [18, 18, 18], fov: 32, near: 0.1, far: 1200 }}
-      gl={{ antialias: true, alpha: false, preserveDrawingBuffer: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.05 }}
+      camera={{ position: [18, 18, 18], fov: 32, near: 0.5, far: 1200 }}
+      gl={{ antialias: true, alpha: false, preserveDrawingBuffer: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.07 }}
       onCreated={({ scene }) => {
         scene.background = new THREE.Color(mode === 'present' ? PRESENT_BG : BUILD_BG)
         onReady?.()
@@ -77,13 +77,10 @@ export default function ConfiguratorCanvas(props) {
 function BackgroundSync({ mode }) {
   const { scene } = useThree()
   useEffect(() => {
-    let tex = null
-    if (mode === 'present') {
-      scene.background = new THREE.Color(PRESENT_BG)
-    } else {
-      tex = makeSkyTexture()
-      scene.background = tex || new THREE.Color(BUILD_BG)
-    }
+    // present mode owns its own scenery background/fog (see PresentScene → SceneEnvironment)
+    if (mode === 'present') { invalidate(); return }
+    const tex = makeSkyTexture()
+    scene.background = tex || new THREE.Color(BUILD_BG)
     invalidate()
     return () => { if (tex) tex.dispose() }
   }, [mode, scene])

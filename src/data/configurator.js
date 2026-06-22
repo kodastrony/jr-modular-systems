@@ -41,11 +41,15 @@ export const variantGroups = [...new Set(VARIANTS.map((v) => v.group))]
    wood/board finishes only — no coloured steel. `graphite` is the default finish
    and the canonical fallback id used across the 3D scenes, so it must remain
    first (and keep the original #3b3e44 grey — the client's standard look). */
+/* `color` is the TRUE albedo now (the procedural maps are luminance-neutral,
+   see textures.js), tuned to read well through ACES tone-mapping:
+   graphite = real anthracite (RAL 7016-ish, reads as a colour not black),
+   white = clean warm architectural white, woods = warm natural larch + walnut. */
 export const CLADDINGS = [
-  { id: 'graphite', name: 'Grafit', kind: 'corrugated', color: '#3b3e44' },
-  { id: 'white', name: 'Biały', kind: 'corrugated', color: '#e9e8e4' },
-  { id: 'wood', name: 'Drewno jasne', kind: 'wood', color: '#b8824a' },
-  { id: 'wood-dark', name: 'Drewno ciemne', kind: 'wood', color: '#6e4a2c' },
+  { id: 'graphite', name: 'Grafit', kind: 'corrugated', color: '#5a5f66' },
+  { id: 'white', name: 'Biały', kind: 'corrugated', color: '#f5f2ec' },
+  { id: 'wood', name: 'Drewno jasne', kind: 'wood', color: '#c6924f' },
+  { id: 'wood-dark', name: 'Drewno ciemne', kind: 'wood', color: '#7a5230' },
 ]
 export const claddingById = Object.fromEntries(CLADDINGS.map((c) => [c.id, c]))
 

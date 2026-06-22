@@ -19,7 +19,7 @@ const ADDON_TOOLS = [
   { id: 'terrace', name: 'Taras', key: 'T', Icon: DeckIcon, hint: 'Przeciągnij po wolnym gruncie obok budynku, aby ułożyć taras.' },
 ]
 
-const DEFAULT_FINISH = { cladding: 'graphite', roof: 'flat', tier: 'plus' }
+const DEFAULT_FINISH = { cladding: 'graphite', roof: 'flat', tier: 'plus', scenery: 'studio' }
 const EMPTY_ADDONS = { openings: [], solar: [], terrace: [] }
 
 /* recover gracefully if the 3D subtree throws — never leave a blank page */
@@ -517,7 +517,7 @@ function BuildUI({
 function PresentUI({ area, floors, price, finish, patchFinish, editAgain, openExport, goToContact, cameraApiRef, sheetOpen, setSheetOpen }) {
   return (
     <div className="cfg-ui">
-      <header className="cfg-bar">
+      <header className="cfg-bar present">
         <button className="cfg-pill ghost" onClick={editAgain} aria-label="Edytuj projekt"><Arrow style={{ width: 15, height: 15, transform: 'scaleX(-1)' }} /> <span className="cfg-pill-lbl">Edytuj projekt</span></button>
         <div className="cfg-brand"><Picture src={company.logoMark} alt="" sizes="44px" loading="eager" /> Wizualizacja <span className="muted">3D</span></div>
         <div className="cfg-bar-spacer" />
