@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import Reveal from '../components/Reveal.jsx'
 import Picture from '../components/Picture.jsx'
-import { Cube, Arrow, Pin } from '../components/Icons.jsx'
+import { Mail, Arrow, Pin } from '../components/Icons.jsx'
 import { realizacje, realizacjeNames } from '../data/content.js'
 
 export default function Realizacje() {
@@ -53,10 +53,10 @@ export default function Realizacje() {
         <div className="container container-narrow" style={{ textAlign: 'center' }}>
           <Reveal>
             <h2 className="h2 balance">Zastanawiasz się nad obiektem dla Twojego biznesu?</h2>
-            <p className="lead" style={{ marginTop: 16 }}>Zacznij od konfiguracji — zajmie to chwilę, a my poznamy wstępne wymagania.</p>
+            <p className="lead" style={{ marginTop: 16 }}>Napisz do nas — poznamy Twoje wymagania i przygotujemy bezpłatną wycenę.</p>
             <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap', marginTop: 26 }}>
-              <Link to="/konfigurator" className="btn btn-accent btn-lg"><Cube style={{ width: 18, height: 18 }} /> Zacznij od konfiguracji</Link>
-              <Link to="/kontakt" className="btn btn-ghost btn-lg">Zapytaj o cenę <Arrow style={{ width: 17, height: 17 }} /></Link>
+              <Link to="/kontakt" className="btn btn-accent btn-lg"><Mail style={{ width: 18, height: 18 }} /> Zamów wycenę</Link>
+              <Link to="/oferta" className="btn btn-ghost btn-lg">Zobacz ofertę <Arrow style={{ width: 17, height: 17 }} /></Link>
             </div>
           </Reveal>
         </div>

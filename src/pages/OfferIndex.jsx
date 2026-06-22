@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import Reveal from '../components/Reveal.jsx'
 import { OfferCard, SectionHead } from '../components/UI.jsx'
-import { Cube, Arrow } from '../components/Icons.jsx'
+import { Mail, Arrow } from '../components/Icons.jsx'
 import { offer } from '../data/content.js'
 
 export default function OfferIndex() {
@@ -32,7 +32,7 @@ export default function OfferIndex() {
         <div className="container container-narrow" style={{ textAlign: 'center' }}>
           <SectionHead center eyebrow="Na czym polega budownictwo modułowe?" title="Szybciej, taniej i z pełną kontrolą jakości" lead="Większość procesu realizacji odbywa się w kontrolowanych warunkach zamkniętej hali fabrycznej. Wykonanie obiektu w technologii prefabrykowanej trwa o wiele krócej niż w tradycyjnych metodach budowlanych — a obiekt łatwo rozbudować, dodając kolejne moduły." />
           <Reveal style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link to="/konfigurator" className="btn btn-accent btn-lg"><Cube style={{ width: 18, height: 18 }} /> Zaprojektuj w 3D</Link>
+            <Link to="/kontakt" className="btn btn-accent btn-lg"><Mail style={{ width: 18, height: 18 }} /> Zamów bezpłatną wycenę</Link>
             <Link to="/technologia" className="btn btn-ghost btn-lg">Poznaj technologię <Arrow style={{ width: 17, height: 17 }} /></Link>
           </Reveal>
         </div>

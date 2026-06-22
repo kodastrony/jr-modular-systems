@@ -1,7 +1,7 @@
 import { useParams, Link, Navigate } from 'react-router-dom'
 import Reveal from '../components/Reveal.jsx'
 import Picture from '../components/Picture.jsx'
-import { Cube, Arrow, Check, ArrowUpRight } from '../components/Icons.jsx'
+import { Mail, Arrow, Check, ArrowUpRight } from '../components/Icons.jsx'
 import { offerBySlug, offer } from '../data/content.js'
 
 export function OfferView({ item }) {
@@ -20,8 +20,8 @@ export function OfferView({ item }) {
             <h1 className="display h1" style={{ maxWidth: '16ch' }}>{item.title}</h1>
             <p className="lead" style={{ marginTop: 18, maxWidth: '58ch' }}>{item.lead}</p>
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 28 }}>
-              <Link to="/konfigurator" className="btn btn-accent btn-lg"><Cube style={{ width: 18, height: 18 }} /> Zaprojektuj w 3D</Link>
-              <Link to="/kontakt" className="btn btn-ghost btn-lg" style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.32)' }}>Zapytaj o wycenę <Arrow style={{ width: 17, height: 17 }} /></Link>
+              <Link to="/kontakt" className="btn btn-accent btn-lg"><Mail style={{ width: 18, height: 18 }} /> Zamów bezpłatną wycenę</Link>
+              <Link to="/realizacje" className="btn btn-ghost btn-lg" style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.32)' }}>Zobacz realizacje <Arrow style={{ width: 17, height: 17 }} /></Link>
             </div>
           </Reveal>
         </div>

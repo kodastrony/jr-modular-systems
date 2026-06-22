@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import Reveal from '../components/Reveal.jsx'
 import Picture from '../components/Picture.jsx'
 import { SectionHead, Stat, OfferCard } from '../components/UI.jsx'
-import { Cube, Arrow, ArrowUpRight, Play } from '../components/Icons.jsx'
+import { Mail, Arrow, ArrowUpRight, Play } from '../components/Icons.jsx'
 import { company, heroBadges, offer, processSteps, realizacje, clients, faq, media } from '../data/content.js'
 
 const mq = (q) => typeof window !== 'undefined' && window.matchMedia && window.matchMedia(q).matches
@@ -40,9 +40,9 @@ export default function Home() {
             <div className="hero-copy">
               <span className="eyebrow" style={{ color: 'var(--accent-2)' }}>{company.hashtag}</span>
               <h1 className="display h1" style={{ marginTop: 18 }}>{company.tagline}</h1>
-              <p className="lead">Producent budynków modułowych — domy, przedszkola, salony samochodowe, biura i gastronomia z kontenerów. Zaprojektuj swój obiekt w interaktywnym konfiguratorze 3D.</p>
+              <p className="lead">Producent budynków modułowych — domy, przedszkola, salony samochodowe, biura i gastronomia z kontenerów. Napisz do nas i otrzymaj bezpłatną, niezobowiązującą wycenę.</p>
               <div className="hero-actions">
-                <Link to="/konfigurator" className="btn btn-accent btn-lg"><Cube style={{ width: 19, height: 19 }} /> Zaprojektuj w 3D</Link>
+                <Link to="/kontakt" className="btn btn-accent btn-lg"><Mail style={{ width: 19, height: 19 }} /> Zamów bezpłatną wycenę</Link>
                 <Link to="/oferta" className="btn btn-ghost btn-lg" style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.32)' }}>Zobacz ofertę <Arrow style={{ width: 17, height: 17 }} /></Link>
               </div>
               <div className="hero-badges">
@@ -61,18 +61,18 @@ export default function Home() {
         <div className="cfg-showcase-glow" />
         <div className="container container-narrow" style={{ textAlign: 'center' }}>
           <Reveal>
-            <span className="eyebrow">Konfigurator 3D</span>
-            <h2 className="h2 balance" style={{ marginTop: 16 }}>Zaprojektuj swój obiekt, moduł po module.</h2>
+            <span className="eyebrow">Bezpłatna wycena</span>
+            <h2 className="h2 balance" style={{ marginTop: 16 }}>Opowiedz nam o swoim obiekcie.</h2>
             <p className="lead" style={{ marginTop: 20, marginInline: 'auto', maxWidth: '56ch' }}>
-              Złóż budynek z gotowych modułów kontenerowych — dobierz układ, elewację i dach, obejrzyj bryłę w 3D, a gotowy projekt wyślij do nas po bezpłatną wycenę.
+              Napisz lub zadzwoń — wspólnie dobierzemy układ, elewację i dach, a Ty otrzymasz bezpłatną, niezobowiązującą wycenę oraz plan realizacji.
             </p>
             <div className="cfg-cta-points">
-              {['Kilkanaście wariantów modułów', 'Podgląd 3D na żywo', 'Wycena bez zobowiązań'].map((t) => (
+              {['Bezpłatna wycena', 'Odpowiedź do 24 h', 'Doradztwo i projekt'].map((t) => (
                 <span className="hero-badge" key={t} style={{ color: 'var(--ink-2)' }}><span className="dot" aria-hidden="true" /> {t}</span>
               ))}
             </div>
             <div style={{ marginTop: 36 }}>
-              <Link to="/konfigurator" className="btn btn-accent btn-lg"><Cube style={{ width: 19, height: 19 }} /> Otwórz konfigurator 3D</Link>
+              <Link to="/kontakt" className="btn btn-accent btn-lg"><Mail style={{ width: 19, height: 19 }} /> Zamów bezpłatną wycenę</Link>
             </div>
           </Reveal>
         </div>
@@ -117,8 +117,8 @@ export default function Home() {
             <Reveal delay={300} className="step" style={{ background: 'var(--accent)', borderColor: 'transparent', gridTemplateColumns: '1fr', alignItems: 'center' }}>
               <div>
                 <h3 style={{ color: 'var(--accent-ink)' }}>Gotowy, by zacząć?</h3>
-                <p style={{ color: 'rgba(26,21,5,0.74)' }}>Otwórz konfigurator i zobacz swój obiekt w 3D.</p>
-                <Link to="/konfigurator" className="btn btn-dark btn-sm" style={{ marginTop: 14 }}><Cube style={{ width: 15, height: 15 }} /> Konfigurator</Link>
+                <p style={{ color: 'rgba(26,21,5,0.74)' }}>Napisz do nas — przygotujemy bezpłatną, niezobowiązującą wycenę.</p>
+                <Link to="/kontakt" className="btn btn-dark btn-sm" style={{ marginTop: 14 }}><Mail style={{ width: 15, height: 15 }} /> Skontaktuj się</Link>
               </div>
             </Reveal>
           </div>

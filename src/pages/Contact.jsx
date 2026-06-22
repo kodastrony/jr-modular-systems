@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Reveal from '../components/Reveal.jsx'
-import { Mail, Phone, Pin, Check, Cube } from '../components/Icons.jsx'
+import { Mail, Phone, Pin, Check } from '../components/Icons.jsx'
 import { company } from '../data/content.js'
 
 export default function Contact() {
@@ -120,10 +120,6 @@ export default function Contact() {
                     <button type="submit" className="btn btn-accent btn-lg" style={{ width: '100%' }} disabled={!form.consent}>Wyślij zapytanie</button>
                   </form>
                 )}
-                <div style={{ marginTop: 18, paddingTop: 18, borderTop: '1px solid var(--line-2)', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
-                  <span className="text-muted" style={{ fontSize: '0.9rem' }}>Wolisz zacząć od wizualizacji?</span>
-                  <Link to="/konfigurator" className="btn btn-ghost btn-sm"><Cube style={{ width: 15, height: 15 }} /> Konfigurator 3D</Link>
-                </div>
               </div>
             </Reveal>
           </div>

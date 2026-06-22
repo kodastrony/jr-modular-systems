@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import Reveal from '../components/Reveal.jsx'
 import Picture from '../components/Picture.jsx'
 import { Stat, SectionHead } from '../components/UI.jsx'
-import { Check, Cube, Arrow } from '../components/Icons.jsx'
+import { Check, Mail, Arrow } from '../components/Icons.jsx'
 import { about, company } from '../data/content.js'
 
 export default function About() {
@@ -63,8 +63,8 @@ export default function About() {
           <Reveal>
             <h2 className="h2 balance">Poszukują Państwo ekspertów od budownictwa modułowego?</h2>
             <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap', marginTop: 26 }}>
-              <Link to="/konfigurator" className="btn btn-accent btn-lg"><Cube style={{ width: 18, height: 18 }} /> Konfigurator 3D</Link>
-              <Link to="/kontakt" className="btn btn-ghost btn-lg">Kontakt <Arrow style={{ width: 17, height: 17 }} /></Link>
+              <Link to="/kontakt" className="btn btn-accent btn-lg"><Mail style={{ width: 18, height: 18 }} /> Skontaktuj się</Link>
+              <Link to="/oferta" className="btn btn-ghost btn-lg">Zobacz ofertę <Arrow style={{ width: 17, height: 17 }} /></Link>
             </div>
           </Reveal>
         </div>

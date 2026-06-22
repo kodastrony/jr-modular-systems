@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import Reveal from '../components/Reveal.jsx'
 import Picture from '../components/Picture.jsx'
 import { SectionHead } from '../components/UI.jsx'
-import { Check, Cube, Arrow, Bolt, Layers, Truck, Leaf } from '../components/Icons.jsx'
+import { Check, Mail, Arrow, Bolt, Layers, Truck, Leaf } from '../components/Icons.jsx'
 import { technology } from '../data/content.js'
 
 const ADV_ICONS = [Bolt, Layers, Truck, Leaf]
@@ -67,7 +67,7 @@ export default function Technology() {
           <Reveal>
             <h2 className="h2 balance">Poznajmy Twoją potrzebę i porozmawiajmy</h2>
             <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap', marginTop: 24 }}>
-              <Link to="/konfigurator" className="btn btn-accent btn-lg"><Cube style={{ width: 18, height: 18 }} /> Zaprojektuj w 3D</Link>
+              <Link to="/kontakt" className="btn btn-accent btn-lg"><Mail style={{ width: 18, height: 18 }} /> Zamów bezpłatną wycenę</Link>
               <Link to="/faq" className="btn btn-ghost btn-lg">Pytania i odpowiedzi <Arrow style={{ width: 17, height: 17 }} /></Link>
             </div>
           </Reveal>

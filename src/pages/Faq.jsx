@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Reveal from '../components/Reveal.jsx'
-import { Cube, Arrow } from '../components/Icons.jsx'
+import { Mail, Arrow } from '../components/Icons.jsx'
 import { faq } from '../data/content.js'
 
 export default function Faq() {
@@ -40,9 +40,9 @@ export default function Faq() {
               <div className="glow" />
               <div style={{ position: 'relative' }}>
                 <h2 className="h3" style={{ color: '#fff' }}>Nie znalazłeś odpowiedzi?</h2>
-                <p style={{ color: 'rgba(255,255,255,0.8)', marginTop: 10 }}>Zacznij od konfiguracji obiektu albo napisz do nas — chętnie doradzimy.</p>
+                <p style={{ color: 'rgba(255,255,255,0.8)', marginTop: 10 }}>Napisz lub zadzwoń — chętnie doradzimy i przygotujemy bezpłatną, niezobowiązującą wycenę.</p>
                 <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginTop: 22 }}>
-                  <Link to="/konfigurator" className="btn btn-accent btn-lg"><Cube style={{ width: 18, height: 18 }} /> Konfigurator</Link>
+                  <Link to="/kontakt" className="btn btn-accent btn-lg"><Mail style={{ width: 18, height: 18 }} /> Zamów wycenę</Link>
                   <Link to="/kontakt" className="btn btn-light btn-lg">Napisz do nas <Arrow style={{ width: 17, height: 17 }} /></Link>
                 </div>
               </div>
