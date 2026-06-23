@@ -8,21 +8,27 @@ import { claddingTex, tiled, getTextures } from '../textures.js'
 import {
   CELL, MODULE_H, FLOOR_H, FOUNDATION_H, buildBounds, claddingById, cellKey,
   roofRectangles, exposedTopCells, bayWorld, bayKey, solarKey,
-  terraceWorld, terraceKey, DOOR, WINDOW,
+  terraceKey, DOOR, WINDOW,
 } from '../../data/builder.js'
 
-/* one shared transmission glass for the whole scene (single render pass) */
-let _glass = null
-function sharedGlass() {
-  if (_glass) return _glass
-  // real glazing reads dark with a cool sky reflection — not a glowing white pane.
-  // lower transmission + a deeper slate tint let the dark interior show through.
-  _glass = new THREE.MeshPhysicalMaterial({
-    color: '#3f5663', metalness: 0, roughness: 0.05,
-    transmission: 0.55, thickness: 0.5, ior: 1.5, transparent: true,
-    clearcoat: 0.7, clearcoatRoughness: 0.04, envMapIntensity: 1.5, reflectivity: 0.6,
-  })
-  return _glass
+/* ── Per-cladding JOINERY palettes ──────────────────────────────────────────
+   FRAME / sill / handle / glass-tint are TAILORED to each wall so the joinery looks
+   designed-for-that-cladding. frame/sill = anodised alu (some metalness), handle =
+   metal hardware, glass = reflective IGU with a per-wall tint + a sky-reflection
+   emissive map (the drei <Environment> is bright softboxes on black, so a head-on
+   pane could reflect a BLACK direction → the emissive sky map keeps it from reading
+   black). The DOOR LEAF is NOT here — it is built from the chosen cladding itself
+   (same colour + wood texture) in openMats, so the door matches the container.
+   Tuned for the bright studio + ACES. */
+const CLAD_JOINERY = {
+  // anthracite wall → brushed-alu frame LIFTED off the dark wall, steel handle
+  graphite:    { frame: { hex: '#5b626b', rough: 0.42, metal: 0.55, env: 1.05 }, sill: { hex: '#5b626b', rough: 0.4, metal: 0.55 }, handle: { hex: '#c6cad0', rough: 0.3, metal: 0.9 }, glass: { hex: '#cfe0ec', emissive: '#9fbdd4', int: 0.5 } },
+  // warm white wall → crisp deep-anthracite frame
+  white:       { frame: { hex: '#34383d', rough: 0.4, metal: 0.5, env: 0.95 }, sill: { hex: '#34383d', rough: 0.36, metal: 0.5 }, handle: { hex: '#3b4046', rough: 0.32, metal: 0.7 }, glass: { hex: '#d2e2ed', emissive: '#a8c4d8', int: 0.5 } },
+  // honey larch wall → dark-bronze alu frame (warm-cohesive), bronze handle
+  wood:        { frame: { hex: '#473a2a', rough: 0.45, metal: 0.5, env: 0.9 }, sill: { hex: '#473a2a', rough: 0.42, metal: 0.5 }, handle: { hex: '#9c8358', rough: 0.35, metal: 0.8 }, glass: { hex: '#d2dde0', emissive: '#aebfc4', int: 0.46 } },
+  // smoked walnut wall → light champagne/taupe frame (reads OFF the dark wall)
+  'wood-dark': { frame: { hex: '#917f64', rough: 0.45, metal: 0.5, env: 0.95 }, sill: { hex: '#917f64', rough: 0.42, metal: 0.5 }, handle: { hex: '#9c8358', rough: 0.35, metal: 0.8 }, glass: { hex: '#d4dde2', emissive: '#b2c2c8', int: 0.46 } },
 }
 
 function useMats() {
@@ -30,7 +36,8 @@ function useMats() {
     const tex = getTextures()
     const deckMap = tex.deck.map.clone(); deckMap.colorSpace = THREE.SRGBColorSpace; deckMap.needsUpdate = true
     const deckBump = tex.deck.bump.clone(); deckBump.needsUpdate = true
-    const pvMap = tex.solar.clone(); pvMap.colorSpace = THREE.SRGBColorSpace; pvMap.needsUpdate = true
+    const pvMap = tex.solar.map.clone(); pvMap.colorSpace = THREE.SRGBColorSpace; pvMap.needsUpdate = true
+    const pvBump = tex.solar.bump.clone(); pvBump.needsUpdate = true
     // standing-seam map runs UP the slope; tile along the ridge (~0.6 m pans)
     const seamMap = tiled(tex.roofseam.map, 16, 1); seamMap.colorSpace = THREE.SRGBColorSpace
     const seamBump = tiled(tex.roofseam.bump, 16, 1)
@@ -52,18 +59,26 @@ function useMats() {
     // concrete foundation plinth
     plinth: new THREE.MeshStandardMaterial({ color: '#4f5358', roughness: 0.96, metalness: 0.04 }),
     // monocrystalline PV module — baked alu-frame+cell map (white colour reads it
-    // true); low-rough metallic + env reflection supplies the blue glass sheen
-    solar: new THREE.MeshStandardMaterial({ color: '#ffffff', map: pvMap, roughness: 0.24, metalness: 0.55, envMapIntensity: 1.3 }),
+    // true). Dielectric glass: metalness 0 + clearcoat (NOT metalness, which was
+    // killing the blue albedo toward black); bump carves the inter-cell grooves.
+    solar: new THREE.MeshPhysicalMaterial({ color: '#ffffff', map: pvMap, bumpMap: pvBump, bumpScale: 0.02, roughness: 0.18, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.08, envMapIntensity: 1.15 }),
     // mill-finish aluminium PV mounting rail
     pvFrame: new THREE.MeshStandardMaterial({ color: '#8a9098', roughness: 0.4, metalness: 0.75, envMapIntensity: 1.0 }),
-    // wood / composite terrace decking — warm tint × neutral plank map
-    deck: new THREE.MeshStandardMaterial({ color: '#b0824f', map: deckMap, bumpMap: deckBump, bumpScale: 0.025, roughness: 0.7, metalness: 0.04, envMapIntensity: 0.4 }),
-    glass: sharedGlass(),
+    // wood / composite terrace decking — desaturated warm teak (#9a7350) that
+    // coordinates with anthracite AND white AND both wood claddings (its own quieter
+    // tone, not a clash). bumpScale lifted so the board gaps + anti-slip ridges read.
+    deck: new THREE.MeshStandardMaterial({ color: '#9a7350', map: deckMap, bumpMap: deckBump, bumpScale: 0.05, roughness: 0.62, metalness: 0, envMapIntensity: 0.5 }),
+    // darker rim/apron board so the deck reads as a finished raised platform
+    deckFascia: new THREE.MeshStandardMaterial({ color: '#7e5d39', roughness: 0.66, metalness: 0, envMapIntensity: 0.4 }),
+    // recessed dark sub-deck frame → the shadow reveal under the rim that sells "raised deck"
+    deckFrame: new THREE.MeshStandardMaterial({ color: '#3c352c', roughness: 0.9, metalness: 0 }),
   })
   }, [])
   // free GPU memory on unmount (present → build) — glass is a shared singleton
   useEffect(() => () => {
-    for (const [k, m] of Object.entries(mats)) if (k !== 'glass' && m?.dispose) m.dispose()
+    // dispose materials AND their cloned map/bumpMap textures (Material.dispose
+    // does not free textures) — glass is a shared singleton, leave it
+    for (const [k, m] of Object.entries(mats)) if (k !== 'glass' && m?.dispose) { m.map?.dispose?.(); m.bumpMap?.dispose?.(); m.dispose() }
   }, [mats])
   return mats
 }
@@ -80,15 +95,17 @@ function useBodies(cladding) {
       const ry = k === 'wood' ? 2.2 : 1
       const map = tiled(pair.map, rx, ry); map.colorSpace = THREE.SRGBColorSpace
       const bump = tiled(pair.bump, rx, ry)
+      // PBR comes from the finish data (CLADDINGS[].pbr) — painted-steel sheen for
+      // anthracite/white (satin, soft-sky env) vs matte dielectric for timber — so
+      // each finish reads as its real material. Falls back to kind defaults.
+      const pbr = clad.pbr || {}
       return new THREE.MeshStandardMaterial({
         map, bumpMap: bump,
         bumpScale: k === 'corrugated' ? 0.055 : k === 'panel' ? 0.04 : k === 'wood' ? 0.04 : 0.02,
         color: clad.color,
-        // painted-steel sheen (low-ish metalness, soft-sky env) keeps colours true
-        // while giving anthracite/white a believable surface; timber is matte dielectric
-        roughness: k === 'render' ? 0.92 : k === 'wood' ? 0.68 : 0.5,
-        metalness: k === 'corrugated' || k === 'panel' ? 0.35 : 0.04,
-        envMapIntensity: k === 'wood' || k === 'render' ? 0.45 : 0.85,
+        roughness: pbr.roughness ?? (k === 'render' ? 0.92 : k === 'wood' ? 0.68 : 0.5),
+        metalness: pbr.metalness ?? (k === 'corrugated' || k === 'panel' ? 0.38 : 0.04),
+        envMapIntensity: pbr.env ?? (k === 'wood' || k === 'render' ? 0.45 : 0.85),
       })
     }
     return { m20: make(6.1), m40: make(12.2) }
@@ -119,7 +136,7 @@ function RoofLayer({ modules, type, mats, cladColor }) {
   // cladding-matched material — gable-end walls + the parapet (attyka) upstand,
   // so a pitched/parapet roof always reads as part of the same building.
   const cladMat = useMemo(
-    () => new THREE.MeshStandardMaterial({ color: cladColor || '#5a5f66', roughness: 0.6, metalness: 0.18, envMapIntensity: 0.6, side: THREE.DoubleSide }),
+    () => new THREE.MeshStandardMaterial({ color: cladColor || '#3f4348', roughness: 0.6, metalness: 0.18, envMapIntensity: 0.6, side: THREE.DoubleSide }),
     [cladColor]
   )
   useEffect(() => () => cladMat.dispose(), [cladMat])
@@ -188,51 +205,92 @@ function RoofLayer({ modules, type, mats, cladColor }) {
 /* ---- client-placed openings (true-to-size, on the exact bays) ----
    frameMat / doorMat are family-aware (see openingMaterials): white PVC frame on
    light/wood walls, anthracite on graphite; anthracite door leaf, or timber on wood. */
-function PDoor({ mats, frameMat, doorMat }) {
-  const w = DOOR.w, h = DOOR.h, cy = h / 2
+/* Visible opening sizes are CLAMPED to fit inside one CELL (1.22 m): glass 1.02 <
+   frame 1.14 < sill 1.16 < CELL — ~0.03 m cladding reveal each side. So an opening
+   on an edge/corner bay never pokes past the module. (The data WINDOW/DOOR sizes
+   drive the build-mode grid; here we only constrain the present-mode render. The
+   openings are surface-mounted PROUD of the wall — there is no boolean cut, so any
+   geometry at local z<=0 would be hidden inside the solid cladding box.) */
+const WIN_GLASS = 1.02, WIN_SILL = 1.16, FB = 0.06   // glass, sill, frame-bar thickness
+const DOOR_LEAF = 0.98
+
+/* A HOLLOW frame = four perimeter bars around an opening (NOT a solid slab, which
+   would hide the glass behind it — the root cause of the "black panel" look).
+   gw×gh is the clear glazed area; bars sit proud at z=zb. */
+function FrameBorder({ mat, gw, gh, zb = 0.045, t = FB, depth = 0.05, bottom = true }) {
+  return (
+    <group>
+      <mesh material={mat} position={[0, gh / 2 + t / 2, zb]}><boxGeometry args={[gw + 2 * t, t, depth]} /></mesh>
+      {bottom && <mesh material={mat} position={[0, -gh / 2 - t / 2, zb]}><boxGeometry args={[gw + 2 * t, t, depth]} /></mesh>}
+      <mesh material={mat} position={[-gw / 2 - t / 2, 0, zb]}><boxGeometry args={[t, gh, depth]} /></mesh>
+      <mesh material={mat} position={[gw / 2 + t / 2, 0, zb]}><boxGeometry args={[t, gh, depth]} /></mesh>
+    </group>
+  )
+}
+
+function PDoor({ frameMat, sillMat, glassMat, doorMat, handleMat }) {
+  const h = DOOR.h, cy = h / 2, dw = DOOR_LEAF, gh = h - 0.04
+  const lightY = h * 0.2, lightH = h * 0.34, lightW = dw * 0.62      // glazed upper light
+  const panelY = -h * 0.18, panelH = h * 0.34, panelW = dw * 0.66    // recessed lower panel
   return (
     <group position={[0, cy, 0]}>
-      {/* dark reveal so the opening reads as real depth */}
-      <mesh material={mats.interior} position={[0, 0, -0.05]}><boxGeometry args={[w + 0.02, h, 0.05]} /></mesh>
-      {/* outer frame, slightly proud of the wall */}
-      <mesh material={frameMat} position={[0, 0.01, 0.03]}><boxGeometry args={[w + 0.12, h + 0.09, 0.08]} /></mesh>
-      {/* leaf */}
-      <mesh material={doorMat} position={[0, 0, 0.05]}><boxGeometry args={[w - 0.02, h - 0.03, 0.05]} /></mesh>
-      {/* glazed upper light */}
-      <mesh material={mats.glass} position={[0, h * 0.22, 0.075]}><boxGeometry args={[w * 0.66, h * 0.34, 0.015]} /></mesh>
-      {/* rail dividing glazed top from solid bottom */}
-      <mesh material={frameMat} position={[0, h * 0.02, 0.078]}><boxGeometry args={[w - 0.02, 0.045, 0.02]} /></mesh>
-      {/* vertical pull handle on the latch side */}
-      <mesh material={mats.cast} position={[w * 0.34, -h * 0.04, 0.09]}><boxGeometry args={[0.04, 0.42, 0.045]} /></mesh>
+      {/* hollow frame around the leaf (3-sided; threshold closes the bottom) */}
+      <FrameBorder mat={frameMat} gw={dw} gh={gh} zb={0.05} bottom={false} />
+      {/* solid door leaf, proud of the wall (surface-mounted) */}
+      <mesh material={doorMat} position={[0, 0, 0.02]}><boxGeometry args={[dw, gh, 0.05]} /></mesh>
+      {/* glazed upper light + its bead → reflective pane visible, framed */}
+      <mesh material={glassMat} position={[0, lightY, 0.055]}><boxGeometry args={[lightW, lightH, 0.02]} /></mesh>
+      <group position={[0, lightY, 0]}><FrameBorder mat={frameMat} gw={lightW} gh={lightH} zb={0.052} t={0.02} depth={0.024} /></group>
+      {/* mid-rail dividing glazed top from solid bottom */}
+      <mesh material={frameMat} position={[0, h * 0.02, 0.05]}><boxGeometry args={[dw, 0.045, 0.05]} /></mesh>
+      {/* recessed panel moulding on the lower leaf (classic door detail) */}
+      <group position={[0, panelY, 0]}><FrameBorder mat={frameMat} gw={panelW} gh={panelH} zb={0.047} t={0.016} depth={0.012} /></group>
+      {/* lever handle + lock escutcheon on the latch side */}
+      <group position={[dw * 0.34, 0, 0.07]}>
+        <mesh material={handleMat}><boxGeometry args={[0.05, 0.2, 0.02]} /></mesh>
+        <mesh material={handleMat} position={[-0.03, 0, 0.025]}><boxGeometry args={[0.11, 0.028, 0.03]} /></mesh>
+      </group>
+      {/* brushed kick plate at the foot of the leaf */}
+      <mesh material={handleMat} position={[0, -gh / 2 + 0.11, 0.047]}><boxGeometry args={[dw - 0.05, 0.18, 0.008]} /></mesh>
+      {/* three hinges on the hinge side */}
+      {[0.34, 0, -0.34].map((yf, i) => (
+        <mesh key={i} material={handleMat} position={[-dw / 2 - 0.005, gh * yf * 0.5, 0.045]}><boxGeometry args={[0.03, 0.1, 0.04]} /></mesh>
+      ))}
       {/* threshold */}
-      <mesh material={mats.cast} position={[0, -h / 2 + 0.01, 0.04]}><boxGeometry args={[w + 0.12, 0.04, 0.1]} /></mesh>
+      <mesh material={sillMat} position={[0, -h / 2 + 0.01, 0.045]}><boxGeometry args={[dw + 2 * FB, 0.045, 0.11]} /></mesh>
     </group>
   )
 }
-function PWindow({ mats, frameMat }) {
-  const w = WINDOW.w, h = WINDOW.h, cy = WINDOW.sill + h / 2
+function PWindow({ frameMat, sillMat, glassMat }) {
+  const h = WINDOW.h, cy = WINDOW.sill + h / 2
+  const gw = WIN_GLASS, gh = h - 0.04, sw = WIN_SILL
   return (
     <group position={[0, cy, 0]}>
-      {/* dark reveal behind the glazing */}
-      <mesh material={mats.interior} position={[0, 0, -0.05]}><boxGeometry args={[w + 0.02, h + 0.02, 0.05]} /></mesh>
-      {/* outer frame */}
-      <mesh material={frameMat} position={[0, 0, 0.025]}><boxGeometry args={[w + 0.1, h + 0.1, 0.075]} /></mesh>
-      {/* glass, recessed slightly inside the frame */}
-      <mesh material={mats.glass} position={[0, 0, 0.01]}><boxGeometry args={[w, h, 0.02]} /></mesh>
-      {/* central mullion + transom → clean four-pane division */}
-      <mesh material={frameMat} position={[0, 0, 0.05]}><boxGeometry args={[0.04, h, 0.045]} /></mesh>
-      <mesh material={frameMat} position={[0, 0, 0.05]}><boxGeometry args={[w, 0.04, 0.045]} /></mesh>
-      {/* protruding sill */}
-      <mesh material={frameMat} position={[0, -h / 2 - 0.055, 0.05]}><boxGeometry args={[w + 0.16, 0.06, 0.13]} /></mesh>
+      {/* the reflective glass PANE — the front-most large surface; the reflective +
+          emissive (sky-reflection map) glass is what keeps it from reading as black. */}
+      <mesh material={glassMat} position={[0, 0, 0.03]}><boxGeometry args={[gw, gh, 0.02]} /></mesh>
+      {/* main outer frame */}
+      <FrameBorder mat={frameMat} gw={gw} gh={gh} zb={0.043} />
+      {/* inner glazing bead — a thinner sash inside the frame (two-tier profile depth) */}
+      <FrameBorder mat={frameMat} gw={gw - 0.05} gh={gh - 0.05} zb={0.052} t={0.016} depth={0.03} />
+      {/* slim mullion + transom over the glass → four-pane division */}
+      <mesh material={frameMat} position={[0, 0, 0.044]}><boxGeometry args={[0.03, gh, 0.046]} /></mesh>
+      <mesh material={frameMat} position={[0, 0, 0.044]}><boxGeometry args={[gw, 0.03, 0.046]} /></mesh>
+      {/* protruding powder-coated alu cill */}
+      <mesh material={sillMat} position={[0, -gh / 2 - FB - 0.01, 0.05]}><boxGeometry args={[sw, 0.06, 0.13]} /></mesh>
+      {/* slim drip cap / head flashing above */}
+      <mesh material={sillMat} position={[0, gh / 2 + FB + 0.012, 0.05]}><boxGeometry args={[sw - 0.04, 0.026, 0.1]} /></mesh>
     </group>
   )
 }
-function OpeningsLayer({ openings, mats, frameMat, doorMat }) {
+function OpeningsLayer({ openings, frameMat, sillMat, doorMat, handleMat, glassMat }) {
   return openings.map((o) => {
     const bw = bayWorld(o)
     return (
       <group key={bayKey(o)} position={[bw.pos[0], bw.floorBottom, bw.pos[2]]} rotation={[0, bw.ry, 0]}>
-        {o.type === 'door' ? <PDoor mats={mats} frameMat={frameMat} doorMat={doorMat} /> : <PWindow mats={mats} frameMat={frameMat} />}
+        {o.type === 'door'
+          ? <PDoor frameMat={frameMat} sillMat={sillMat} glassMat={glassMat} doorMat={doorMat} handleMat={handleMat} />
+          : <PWindow frameMat={frameMat} sillMat={sillMat} glassMat={glassMat} />}
       </group>
     )
   })
@@ -292,14 +350,32 @@ function SolarLayer({ solar, modules, roofType, mats }) {
   })
 }
 
-/* ---- client-placed terrace deck (on the exact ground cells) ---- */
+/* ---- client-placed terrace deck (on the exact ground cells) ----
+   Each tile = a proud top board layer + a recessed dark sub-frame (the shadow reveal
+   that reads as a raised deck) + perimeter fascia boards on the OUTER edges only, so
+   a multi-cell terrace reads as one finished platform, not floating slabs. */
 function TerraceLayer({ terrace, mats }) {
+  const set = useMemo(() => new Set(terrace.map((c) => `${c.x},${c.z}`)), [terrace])
+  const yTop = FOUNDATION_H            // deck surface ~ container plinth level
+  const FH = 0.13                       // fascia / skirt height
   return terrace.map((c) => {
-    const w = terraceWorld(c)
+    const cx = (c.x + 0.5) * CELL, cz = (c.z + 0.5) * CELL
+    const edges = []
+    if (!set.has(`${c.x + 1},${c.z}`)) edges.push([(c.x + 1) * CELL, cz, [0.03, FH, CELL]])
+    if (!set.has(`${c.x - 1},${c.z}`)) edges.push([c.x * CELL, cz, [0.03, FH, CELL]])
+    if (!set.has(`${c.x},${c.z + 1}`)) edges.push([cx, (c.z + 1) * CELL, [CELL, FH, 0.03]])
+    if (!set.has(`${c.x},${c.z - 1}`)) edges.push([cx, c.z * CELL, [CELL, FH, 0.03]])
     return (
-      <mesh key={terraceKey(c)} position={[w.cx, w.y - 0.05, w.cz]} material={mats.deck} receiveShadow castShadow>
-        <boxGeometry args={[CELL, 0.14, CELL]} />
-      </mesh>
+      <group key={terraceKey(c)}>
+        {/* proud top deck boards (a thin contact shadow grounds them) */}
+        <mesh position={[cx, yTop - 0.025, cz]} material={mats.deck} receiveShadow castShadow><boxGeometry args={[CELL, 0.05, CELL]} /></mesh>
+        {/* recessed dark sub-frame → shadow reveal under the deck rim */}
+        <mesh position={[cx, yTop - 0.1, cz]} material={mats.deckFrame}><boxGeometry args={[CELL - 0.14, 0.09, CELL - 0.14]} /></mesh>
+        {/* perimeter fascia boards (outer edges only) */}
+        {edges.map(([ex, ez, size], i) => (
+          <mesh key={i} position={[ex, yTop - 0.06, ez]} material={mats.deckFascia} castShadow receiveShadow><boxGeometry args={size} /></mesh>
+        ))}
+      </group>
     )
   })
 }
@@ -459,19 +535,35 @@ export default function PresentScene({ modules, openings = [], solar = [], terra
   const bodies = useBodies(finish?.cladding)
   const bounds = useMemo(() => buildBounds(modules), [modules])
 
-  // realistic dark-aluminium joinery (anthracite RAL 7016 — the standard modern
-  // window/door frame; reads premium on every cladding). Door leaf goes warm
-  // timber on wood walls, otherwise a deep anthracite leaf.
+  // joinery materials TAILORED to the current cladding (see CLAD_JOINERY): frame +
+  // cill anodised alu, door leaf matte timber, handle metal hardware, and a per-wall
+  // tinted reflective glass (emissive sky-reflection map → never a black panel).
   const openMats = useMemo(() => {
-    const isWood = finish?.cladding === 'wood' || finish?.cladding === 'wood-dark'
-    const frameMat = new THREE.MeshStandardMaterial({
-      color: '#33373c', roughness: 0.4, metalness: 0.45, envMapIntensity: 0.85,
+    const J = CLAD_JOINERY[finish?.cladding] || CLAD_JOINERY.graphite
+    const frameMat = new THREE.MeshStandardMaterial({ color: J.frame.hex, roughness: J.frame.rough, metalness: J.frame.metal, envMapIntensity: J.frame.env })
+    const sillMat = new THREE.MeshStandardMaterial({ color: J.sill.hex, roughness: J.sill.rough, metalness: J.sill.metal, envMapIntensity: 1.0 })
+    // door leaf MATCHES the chosen container cladding: same colour, + the wood plank
+    // texture on timber claddings (wood building → wood door; black → black door).
+    // The contrasting frame + glazed light + hardware still read it AS a door.
+    const clad = claddingById[finish?.cladding] || claddingById.graphite
+    const pbr = clad.pbr || {}
+    let doorMat
+    if (clad.kind === 'wood') {
+      const pair = claddingTex('wood')
+      const dMap = tiled(pair.map, 1, 3); dMap.colorSpace = THREE.SRGBColorSpace
+      const dBump = tiled(pair.bump, 1, 3)
+      doorMat = new THREE.MeshStandardMaterial({ color: clad.color, map: dMap, bumpMap: dBump, bumpScale: 0.04, roughness: pbr.roughness ?? 0.68, metalness: pbr.metalness ?? 0.05, envMapIntensity: pbr.env ?? 0.45 })
+    } else {
+      doorMat = new THREE.MeshStandardMaterial({ color: clad.color, roughness: pbr.roughness ?? 0.5, metalness: pbr.metalness ?? 0.36, envMapIntensity: pbr.env ?? 0.8 })
+    }
+    const handleMat = new THREE.MeshStandardMaterial({ color: J.handle.hex, roughness: J.handle.rough, metalness: J.handle.metal, envMapIntensity: 1.1 })
+    const glassMat = new THREE.MeshPhysicalMaterial({
+      color: J.glass.hex, metalness: 0, roughness: 0.05,
+      transmission: 0.07, thickness: 0.35, ior: 1.5, transparent: true,
+      clearcoat: 1, clearcoatRoughness: 0.04, envMapIntensity: 2.6, reflectivity: 0.82,
+      emissive: new THREE.Color(J.glass.emissive), emissiveIntensity: J.glass.int, emissiveMap: getTextures().glassReflect,
     })
-    const doorMat = new THREE.MeshStandardMaterial({
-      color: isWood ? '#6b4528' : '#2f3338',
-      roughness: isWood ? 0.6 : 0.38, metalness: isWood ? 0.05 : 0.4, envMapIntensity: 0.8,
-    })
-    return { frameMat, doorMat }
+    return { frameMat, sillMat, doorMat, handleMat, glassMat }
   }, [finish?.cladding])
 
   // dispose cladding bodies AND their cloned map/bumpMap textures (Material.dispose
@@ -481,7 +573,13 @@ export default function PresentScene({ modules, openings = [], solar = [], terra
       m?.map?.dispose(); m?.bumpMap?.dispose(); m?.dispose()
     }
   }, [bodies])
-  useEffect(() => () => { openMats.frameMat.dispose(); openMats.doorMat.dispose() }, [openMats])
+  useEffect(() => () => {
+    // emissiveMap is the shared getTextures().glassReflect — do NOT dispose it;
+    // doorMat's wood map/bumpMap ARE cloned (tiled) → dispose them
+    openMats.frameMat.dispose(); openMats.sillMat.dispose()
+    openMats.doorMat.map?.dispose(); openMats.doorMat.bumpMap?.dispose(); openMats.doorMat.dispose()
+    openMats.handleMat.dispose(); openMats.glassMat.dispose()
+  }, [openMats])
 
   const env = STUDIO
 
@@ -527,7 +625,7 @@ export default function PresentScene({ modules, openings = [], solar = [], terra
       <RoofLayer modules={modules} type={finish?.roof || 'flat'} mats={mats} cladColor={claddingById[finish?.cladding]?.color} />
 
       {/* client-placed add-ons, rendered exactly where they were designed */}
-      <OpeningsLayer openings={openings} mats={mats} frameMat={openMats.frameMat} doorMat={openMats.doorMat} />
+      <OpeningsLayer openings={openings} {...openMats} />
       <SolarLayer solar={solar} modules={modules} roofType={finish?.roof || 'flat'} mats={mats} />
       <TerraceLayer terrace={terrace} mats={mats} />
 

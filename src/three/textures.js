@@ -127,34 +127,64 @@ function render() {
   return { map: toTex(cc), bump: toTex(bc, false) }
 }
 
-/* monocrystalline PV module — aluminium frame + dark blue cell grid with busbars.
-   Used with a white material colour so these baked tones read true; the low-rough
-   metallic material + env reflection then supply the characteristic blue glass sheen. */
+/* monocrystalline PV module — {map, bump}. Aluminium frame + deep-blue chamfered
+   mono cells with silver busbars, a per-cell anti-reflective sheen and a recessed
+   inter-cell grid carved by the bump map. Used with a white material colour + a
+   clearcoat (NOT metalness — a dielectric glass on coloured cells) so it reads as
+   real dark-blue PV glass under the studio light, never a flat black slab. */
 function solar() {
-  const S = 256, c = canvasOf(S, S), x = c.getContext('2d')
-  // aluminium frame
-  x.fillStyle = '#969ca4'; x.fillRect(0, 0, S, S)
-  // dark glass field inset
-  const m = 9
-  x.fillStyle = '#0e1626'; x.fillRect(m, m, S - 2 * m, S - 2 * m)
-  const cols = 6, rows = 6, gap = 3
+  const S = 512, cc = canvasOf(S, S), x = cc.getContext('2d')
+  // anodised aluminium frame
+  x.fillStyle = '#c2c8d0'; x.fillRect(0, 0, S, S)
+  const fw = Math.round(S * 0.035)
+  x.fillStyle = '#dfe4ea'; x.fillRect(fw - 2, fw - 2, S - 2 * (fw - 2), S - 2 * (fw - 2))   // inner highlight lip
+  // dark-blue glass field (the grout/gap colour between cells)
+  const m = Math.round(S * 0.045)
+  x.fillStyle = '#0c1320'; x.fillRect(m, m, S - 2 * m, S - 2 * m)
+  const cols = 6, rows = 6, gap = Math.round(S * 0.012)
   const field = S - 2 * m, cw = field / cols
   for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) {
     const cx = m + i * cw + gap / 2, cy = m + j * cw + gap / 2, s = cw - gap
-    // subtle radial sheen per monocrystalline cell
-    const g = x.createLinearGradient(cx, cy, cx + s, cy + s)
-    g.addColorStop(0, '#1a2740'); g.addColorStop(0.5, '#141f36'); g.addColorStop(1, '#101a2e')
-    x.fillStyle = g; x.fillRect(cx, cy, s, s)
-    // clipped corners hint (monocrystalline pseudo-square)
-    x.fillStyle = '#0e1626'
-    x.beginPath(); x.moveTo(cx, cy); x.lineTo(cx + s * 0.14, cy); x.lineTo(cx, cy + s * 0.14); x.closePath(); x.fill()
-    x.beginPath(); x.moveTo(cx + s, cy + s); x.lineTo(cx + s - s * 0.14, cy + s); x.lineTo(cx + s, cy + s - s * 0.14); x.closePath(); x.fill()
-    // two vertical busbars
-    x.strokeStyle = 'rgba(150,170,200,0.16)'; x.lineWidth = 1
-    x.beginPath(); x.moveTo(cx + s * 0.34, cy); x.lineTo(cx + s * 0.34, cy + s)
-    x.moveTo(cx + s * 0.67, cy); x.lineTo(cx + s * 0.67, cy + s); x.stroke()
+    // per-cell tone jitter so 36 cells don't read as one flat slab
+    const jit = (i * 7 + j * 13) % 11 / 11 - 0.5
+    const r = 18 + jit * 6, g = 30 + jit * 8, b = 58 + jit * 10
+    x.fillStyle = `rgb(${r | 0},${g | 0},${b | 0})`; x.fillRect(cx, cy, s, s)
+    // anti-reflective radial sheen, hotspot toward the upper-left (sun side)
+    const gx = cx + s * 0.32, gy = cy + s * 0.30
+    const rg = x.createRadialGradient(gx, gy, s * 0.04, cx + s * 0.5, cy + s * 0.5, s * 0.78)
+    rg.addColorStop(0, 'rgba(60,96,150,0.55)'); rg.addColorStop(0.45, 'rgba(28,52,96,0.30)'); rg.addColorStop(1, 'rgba(8,16,34,0)')
+    x.fillStyle = rg; x.fillRect(cx, cy, s, s)
+    // monocrystalline chamfered corners (all four) painted in the field colour
+    const ch = s * 0.16; x.fillStyle = '#0c1320'
+    x.beginPath(); x.moveTo(cx, cy); x.lineTo(cx + ch, cy); x.lineTo(cx, cy + ch); x.closePath(); x.fill()
+    x.beginPath(); x.moveTo(cx + s, cy); x.lineTo(cx + s - ch, cy); x.lineTo(cx + s, cy + ch); x.closePath(); x.fill()
+    x.beginPath(); x.moveTo(cx, cy + s); x.lineTo(cx + ch, cy + s); x.lineTo(cx, cy + s - ch); x.closePath(); x.fill()
+    x.beginPath(); x.moveTo(cx + s, cy + s); x.lineTo(cx + s - ch, cy + s); x.lineTo(cx + s, cy + s - ch); x.closePath(); x.fill()
+    // three silver busbars
+    const bw = Math.max(1, s * 0.018)
+    for (const f of [0.25, 0.5, 0.75]) {
+      x.strokeStyle = 'rgba(176,190,214,0.42)'; x.lineWidth = bw
+      x.beginPath(); x.moveTo(cx + s * f, cy); x.lineTo(cx + s * f, cy + s); x.stroke()
+      x.strokeStyle = 'rgba(214,224,240,0.3)'; x.lineWidth = 1
+      x.beginPath(); x.moveTo(cx + s * f + 1, cy); x.lineTo(cx + s * f + 1, cy + s); x.stroke()
+    }
   }
-  return toTex(c)
+  // crisp recessed grid over the gaps so cells stay discrete at distance
+  x.strokeStyle = 'rgba(4,8,18,0.6)'; x.lineWidth = 1
+  for (let i = 0; i <= cols; i++) { x.beginPath(); x.moveTo(m + i * cw, m); x.lineTo(m + i * cw, S - m); x.stroke(); x.beginPath(); x.moveTo(m, m + i * cw); x.lineTo(S - m, m + i * cw); x.stroke() }
+
+  // bump (height) map: frame proud, inter-cell gaps recessed, busbars faintly raised
+  const bc = canvasOf(S, S), b = bc.getContext('2d')
+  b.fillStyle = '#9c9c9c'; b.fillRect(0, 0, S, S)
+  b.fillStyle = '#ffffff'; b.fillRect(0, 0, S, fw); b.fillRect(0, S - fw, S, fw); b.fillRect(0, 0, fw, S); b.fillRect(S - fw, 0, fw, S)
+  b.strokeStyle = '#2a2a2a'; b.lineWidth = gap
+  for (let i = 0; i <= cols; i++) { b.beginPath(); b.moveTo(m + i * cw, m); b.lineTo(m + i * cw, S - m); b.stroke(); b.beginPath(); b.moveTo(m, m + i * cw); b.lineTo(S - m, m + i * cw); b.stroke() }
+  for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) {
+    const cx = m + i * cw + gap / 2, cy = m + j * cw + gap / 2, s = cw - gap
+    b.strokeStyle = '#c4c4c4'; b.lineWidth = Math.max(1, s * 0.018)
+    for (const f of [0.25, 0.5, 0.75]) { b.beginPath(); b.moveTo(cx + s * f, cy); b.lineTo(cx + s * f, cy + s); b.stroke() }
+  }
+  return { map: toTex(cc), bump: toTex(bc, false) }
 }
 
 /* standing-seam metal roof — near-white pan with a raised seam line; tiled along
@@ -171,26 +201,53 @@ function roofseam() {
   return { map: toTex(cc), bump: toTex(bc, false) }
 }
 
-/* wood / composite deck boards — near-white plank map (tint reads true) running
-   along one axis, with board gaps + faint grain. Used with a warm deck colour. */
+/* wood / composite deck boards — {map, bump}. Near-white luminance-neutral plank
+   map (tint reads true via material.color), 6 real ~20 cm boards with per-board
+   tone variance, meandering warm grain, occasional knots, anti-slip grooves, a
+   staggered butt joint, and dark gap shadows. The bump carries the deep board
+   gaps + anti-slip ridges so it reads as a real raised deck, not a printed slab. */
 function deck() {
-  const W = 256, H = 256, boards = 8, bw = H / boards
+  const W = 512, H = 512, boards = 6, bw = H / boards
   const cc = canvasOf(W, H), x = cc.getContext('2d')
-  x.fillStyle = '#f0eee9'; x.fillRect(0, 0, W, H)
+  x.fillStyle = '#f1efe9'; x.fillRect(0, 0, W, H)
   for (let i = 0; i < boards; i++) {
-    const base = 233 + Math.random() * 14
-    x.fillStyle = `rgb(${base | 0},${(base - 2) | 0},${(base - 5) | 0})`
-    x.fillRect(0, i * bw, W, bw)
-    for (let s = 0; s < 12; s++) { x.strokeStyle = `rgba(70,48,28,${Math.random() * 0.05})`; x.lineWidth = 0.8; const yy = i * bw + Math.random() * bw; x.beginPath(); x.moveTo(0, yy); x.lineTo(W, yy); x.stroke() }
-    // subtle anti-slip groove pair on composite boards
-    x.strokeStyle = 'rgba(40,28,18,0.05)'; x.lineWidth = 1
-    x.beginPath(); x.moveTo(0, i * bw + bw * 0.4); x.lineTo(W, i * bw + bw * 0.4); x.moveTo(0, i * bw + bw * 0.6); x.lineTo(W, i * bw + bw * 0.6); x.stroke()
+    const y0 = i * bw
+    const base = 228 + Math.random() * 20                 // per-board lightness variance
+    x.fillStyle = `rgb(${base | 0},${(base - 3) | 0},${(base - 7) | 0})`
+    x.fillRect(0, y0, W, bw)
+    // meandering warm grain streaks (larch-like, not ruler-straight)
+    for (let s = 0; s < 22; s++) {
+      x.strokeStyle = `rgba(74,52,30,${Math.random() * 0.05})`; x.lineWidth = 0.4 + Math.random() * 0.9
+      const yy = y0 + Math.random() * bw
+      x.beginPath(); x.moveTo(0, yy)
+      x.bezierCurveTo(W * 0.33, yy + (Math.random() - 0.5) * 8, W * 0.66, yy + (Math.random() - 0.5) * 8, W, yy + (Math.random() - 0.5) * 4)
+      x.stroke()
+    }
+    // a few darker "cathedral" figure streaks toward board centre
+    for (let s = 0; s < 6; s++) { x.strokeStyle = `rgba(60,42,24,0.04)`; x.lineWidth = 1; const yy = y0 + bw * (0.35 + Math.random() * 0.3); x.beginPath(); x.moveTo(0, yy); x.lineTo(W, yy); x.stroke() }
+    // anti-slip groove set (faint in albedo, mostly in the bump)
+    for (let g = 0; g < 6; g++) { x.strokeStyle = 'rgba(38,26,16,0.035)'; x.lineWidth = 0.6; const yy = y0 + bw * (0.18 + g * 0.13); x.beginPath(); x.moveTo(0, yy); x.lineTo(W, yy); x.stroke() }
+    // occasional knot
+    if (Math.random() < 0.4) {
+      const kx = Math.random() * W, ky = y0 + bw * (0.3 + Math.random() * 0.4), kr = 4 + Math.random() * 5
+      const kg = x.createRadialGradient(kx, ky, 0, kx, ky, kr)
+      kg.addColorStop(0, 'rgba(46,30,16,0.30)'); kg.addColorStop(0.6, 'rgba(70,48,26,0.12)'); kg.addColorStop(1, 'rgba(0,0,0,0)')
+      x.fillStyle = kg; x.beginPath(); x.arc(kx, ky, kr, 0, 7); x.fill()
+    }
+    // staggered board-end butt joint
+    const xJ = W * (0.35 + Math.random() * 0.3)
+    x.fillStyle = 'rgba(28,18,10,0.28)'; x.fillRect(xJ, y0, 1, bw)
   }
-  for (let i = 0; i <= boards; i++) { x.fillStyle = 'rgba(35,24,15,0.22)'; x.fillRect(0, i * bw - 1, W, 2) }
+  // dark board-gap shadows (distinct so the gaps read as a raised deck)
+  for (let i = 0; i <= boards; i++) { x.fillStyle = 'rgba(28,18,10,0.34)'; x.fillRect(0, i * bw - 1, W, 2); x.fillStyle = 'rgba(255,255,255,0.05)'; x.fillRect(0, i * bw + 2, W, 1) }
+  for (let i = 0; i < 2500; i++) { x.fillStyle = `rgba(0,0,0,${Math.random() * 0.02})`; x.fillRect(Math.random() * W, Math.random() * H, 1, 1) }
 
   const bc = canvasOf(W, H), b = bc.getContext('2d')
-  b.fillStyle = '#8f8f8f'; b.fillRect(0, 0, W, H)
-  for (let i = 0; i <= boards; i++) { b.fillStyle = '#181818'; b.fillRect(0, i * bw - 1.5, W, 3) }
+  b.fillStyle = '#909090'; b.fillRect(0, 0, W, H)
+  for (let i = 0; i <= boards; i++) { b.fillStyle = '#141414'; b.fillRect(0, i * bw - 2, W, 4) }            // deep board gaps
+  for (let i = 0; i < boards; i++) { const y0 = i * bw; b.strokeStyle = '#5a5a5a'; b.lineWidth = 1; for (let g = 0; g < 6; g++) { const yy = y0 + bw * (0.18 + g * 0.13); b.beginPath(); b.moveTo(0, yy); b.lineTo(W, yy); b.stroke() }; b.fillStyle = '#101010'; b.fillRect(W * (0.35 + ((i * 97) % 30) / 100), y0, 2, bw) }
+  for (let s = 0; s < 160; s++) { b.strokeStyle = `rgba(255,255,255,0.10)`; b.lineWidth = 0.6; const yy = Math.random() * H; b.beginPath(); b.moveTo(0, yy); b.lineTo(W, yy); b.stroke() }
+  for (let s = 0; s < 120; s++) { b.strokeStyle = `rgba(0,0,0,0.08)`; b.lineWidth = 0.6; const yy = Math.random() * H; b.beginPath(); b.moveTo(0, yy); b.lineTo(W, yy); b.stroke() }
   return { map: toTex(cc), bump: toTex(bc, false) }
 }
 
@@ -291,6 +348,33 @@ function glass() {
   return toTex(c)
 }
 
+/* glass REFLECTION map — used as the glazing emissiveMap so a pane reads as a real
+   IGU instead of a flat milky panel: a vertical sky→ground gradient (bright reflected
+   sky up top, dim interior/ground low down) + two soft diagonal sky-streak highlights.
+   Multiplied by the per-cladding emissive tint, so the tint stays but the pane gains
+   depth + a believable reflection. */
+function glassReflect() {
+  const S = 256, c = canvasOf(S, S), x = c.getContext('2d')
+  const g = x.createLinearGradient(0, 0, 0, S)
+  g.addColorStop(0, '#f2f7fb')      // reflected sky (bright)
+  g.addColorStop(0.42, '#cdddea')
+  g.addColorStop(0.68, '#8ea2b4')
+  g.addColorStop(0.86, '#5d6f7e')
+  g.addColorStop(1, '#3c4956')      // dim interior / ground reflection (never black)
+  x.fillStyle = g; x.fillRect(0, 0, S, S)
+  // a faint horizon band where sky meets ground reflection
+  x.fillStyle = 'rgba(238,245,250,0.16)'; x.fillRect(0, S * 0.6, S, 3)
+  // two soft diagonal reflection streaks (the classic glazing highlight)
+  x.save(); x.translate(S * 0.5, S * 0.5); x.rotate(-0.62); x.translate(-S * 0.5, -S * 0.5)
+  for (const [cx, w, a] of [[S * 0.32, S * 0.13, 0.42], [S * 0.52, S * 0.05, 0.26]]) {
+    const sg = x.createLinearGradient(cx - w, 0, cx + w, 0)
+    sg.addColorStop(0, 'rgba(255,255,255,0)'); sg.addColorStop(0.5, `rgba(255,255,255,${a})`); sg.addColorStop(1, 'rgba(255,255,255,0)')
+    x.fillStyle = sg; x.fillRect(cx - w, -S, 2 * w, S * 3)
+  }
+  x.restore()
+  return toTex(c)
+}
+
 /* showroom floor — mid-light, soft fall-off; gloss + reflections do the work */
 function floor() {
   const S = 512, c = canvasOf(S, S), x = c.getContext('2d')
@@ -324,6 +408,7 @@ export function getTextures() {
     deck: deck(),
     roofseam: roofseam(),
     glass: glass(),
+    glassReflect: glassReflect(),
     floor: floor(),
     wall: wall(),
   }

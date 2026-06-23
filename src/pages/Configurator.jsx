@@ -346,6 +346,7 @@ export default function Configurator() {
       setFloor: setActiveFloor,
       placeOpening, placeSolar, placeTerrace, eraseElement,
       selectTool, setRot, loadPreset, clearAll, generate, editAgain,
+      patchFinish, setCladding: (id) => patchFinish({ cladding: id }), setRoof: (id) => patchFinish({ roof: id }),
       undo: () => dispatch({ type: 'undo' }),
       redo: () => dispatch({ type: 'redo' }),
       validate: (cand) => B.validatePlacement(cand, modules),

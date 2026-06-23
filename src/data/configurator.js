@@ -45,11 +45,15 @@ export const variantGroups = [...new Set(VARIANTS.map((v) => v.group))]
    see textures.js), tuned to read well through ACES tone-mapping:
    graphite = real anthracite (RAL 7016-ish, reads as a colour not black),
    white = clean warm architectural white, woods = warm natural larch + walnut. */
+// Steel: satin painted-coil sheen (metalness ~0.37, soft-sky env ~0.85).
+// Timber: matte dielectric (metalness ~0.04, low env ~0.42) so it never reads
+// as laminate. PBR is consumed by PresentScene useBodies(). graphite MUST stay
+// first (the 3D falls back to CLADDINGS[0] by id).
 export const CLADDINGS = [
-  { id: 'graphite', name: 'Grafit', kind: 'corrugated', color: '#5a5f66' },
-  { id: 'white', name: 'Biały', kind: 'corrugated', color: '#f5f2ec' },
-  { id: 'wood', name: 'Drewno jasne', kind: 'wood', color: '#c6924f' },
-  { id: 'wood-dark', name: 'Drewno ciemne', kind: 'wood', color: '#7a5230' },
+  { id: 'graphite', name: 'Grafit', kind: 'corrugated', color: '#3f4348', pbr: { roughness: 0.5, metalness: 0.38, env: 0.85 } },
+  { id: 'white', name: 'Biały', kind: 'corrugated', color: '#ece9e1', pbr: { roughness: 0.52, metalness: 0.36, env: 0.8 } },
+  { id: 'wood', name: 'Drewno jasne', kind: 'wood', color: '#be9a5e', pbr: { roughness: 0.7, metalness: 0.04, env: 0.42 } },
+  { id: 'wood-dark', name: 'Drewno ciemne', kind: 'wood', color: '#5c4029', pbr: { roughness: 0.66, metalness: 0.05, env: 0.42 } },
 ]
 export const claddingById = Object.fromEntries(CLADDINGS.map((c) => [c.id, c]))
 
