@@ -689,10 +689,19 @@ section { position: relative; }
 /* FAQ accordion icon spins to a + on the light theme */
 .faq-q:hover { color: var(--accent-text); }
 
+/* featured realizacje tile — gentle photo crossfade (caption follows).
+   `.featured-tile .featured-img` (0,2,0) must out-specify base `.tile img` (0,1,1)
+   so the opacity transition actually runs (otherwise the swap is instant). */
+.featured-tile .featured-img { opacity: 0; transition: opacity 1.3s var(--ease), transform 0.8s var(--ease); }
+.featured-tile .featured-img.on { opacity: 1; }
+.featured-cap { animation: capFade 0.7s var(--ease); }
+@keyframes capFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
 @media (prefers-reduced-motion: reduce) {
   .page-transition { animation: none; }
   .reveal .feature-media img { transform: none; }
   .textlink::after { display: none; }
+  .featured-cap { animation: none; }
 }
 
 /* ============================================================

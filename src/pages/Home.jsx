@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Reveal from '../components/Reveal.jsx'
 import Picture from '../components/Picture.jsx'
@@ -23,6 +23,32 @@ function HeroMedia() {
   if (preferStill()) return <Picture src={media.poster} alt="" sizes="100vw" loading="eager" fetchpriority="high" />
   const src = (mq('(max-width: 760px)') && media.heroLoopMobile) || media.heroLoop
   return <video src={src} poster={media.poster} autoPlay muted loop playsInline preload="metadata" />
+}
+
+/* The big realizacje tile gently crossfades through a few project photos (with the
+   caption following); the rest of the grid stays static. Pauses for reduced motion. */
+function FeaturedTile({ items, interval = 4500 }) {
+  const [i, setI] = useState(0)
+  useEffect(() => {
+    if (mq('(prefers-reduced-motion: reduce)') || items.length < 2) return
+    const id = setInterval(() => setI((p) => (p + 1) % items.length), interval)
+    return () => clearInterval(id)
+  }, [items.length, interval])
+  const cur = items[i]
+  return (
+    <Link to="/realizacje" className="tile tall featured-tile" style={{ minHeight: 380, height: '100%' }}>
+      {items.map((it, idx) => (
+        <Picture key={idx} src={it.img} alt={it.title} sizes="(max-width: 720px) 100vw, 50vw"
+          className={`featured-img ${idx === i ? 'on' : ''}`} loading={idx === 0 ? 'eager' : 'lazy'} />
+      ))}
+      <div className="tile-body">
+        <div key={i} className="featured-cap">
+          <h3 style={{ fontSize: '1.8rem' }}>{cur.title}</h3>
+          <p>{cur.place}</p>
+        </div>
+      </div>
+    </Link>
+  )
 }
 
 export default function Home() {
@@ -133,12 +159,15 @@ export default function Home() {
             <Reveal><Link to="/realizacje" className="textlink" style={{ fontSize: '1rem' }}>Zobacz wszystkie <ArrowUpRight /></Link></Reveal>
           </div>
           <div className="bento">
-            {realizacje.slice(0, 5).map((r, i) => (
-              <Reveal key={r.title} delay={i * 50} className={i === 0 ? 'span-2 row-2' : ''}>
-                <Link to="/realizacje" className={`tile ${i === 0 ? 'tall' : ''}`} style={{ minHeight: i === 0 ? 380 : 290, height: '100%' }}>
+            <Reveal className="span-2 row-2">
+              <FeaturedTile items={[0, 5, 6, 10].map((n) => realizacje[n]).filter(Boolean)} />
+            </Reveal>
+            {realizacje.slice(1, 5).map((r, idx) => (
+              <Reveal key={r.title} delay={(idx + 1) * 50}>
+                <Link to="/realizacje" className="tile" style={{ minHeight: 290, height: '100%' }}>
                   <Picture src={r.img} alt={r.title} sizes="(max-width: 720px) 100vw, 50vw" />
                   <div className="tile-body">
-                    <h3 style={{ fontSize: i === 0 ? '1.8rem' : '1.3rem' }}>{r.title}</h3>
+                    <h3 style={{ fontSize: '1.3rem' }}>{r.title}</h3>
                     <p>{r.place}</p>
                   </div>
                 </Link>
